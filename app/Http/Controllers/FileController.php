@@ -16,7 +16,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\QueryBuilder\AllowedSort;
-use App\Filters\GetSameFilesWithTags;
 use App\Filters\SortByPopular;
 use App\Filters\SortBySelling;
 use App\Http\Requests\EnsureUserHasFileRequest;
@@ -60,7 +59,6 @@ class FileController extends Controller
                 AllowedFilter::exact('percentage'),
                 AllowedFilter::custom('amount', new FilterBySpecialValue),
                 AllowedFilter::custom('rebate', new FilterBySpecialValue),
-                AllowedFilter::custom('sameFiles', new GetSameFilesWithTags),
                 AllowedFilter::scope('category', 'categoryId'),
                 AllowedFilter::scope('category_name', 'categoryName'),
                 AllowedFilter::scope('tag_id', 'tagId'),
