@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Saeedth1214
@@ -18,16 +19,16 @@ use App\Contracts\LocalizeFaDescription;
  */
 final class UserRoleEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {
-    const Admin = 1;
-    const Normal = 0;
+    const ADMIN = 1;
+    const NORMAL = 0;
 
     public static function getLocalizeFaDescription(): array
     {
         return [
             static::class => [
 
-                'Admin' => 'ادمین',
-                'Normal' => 'کاربر عادی'
+                'ADMIN' => 'ادمین',
+                'NORMAL' => 'کاربر عادی'
             ]
 
         ];

@@ -88,11 +88,11 @@ Route::prefix('user')
 Route::prefix('frontend')
     ->as('frontend.')
     ->group(function () {
-        Route::get('users', [UserController::class, 'index'])->name('.users');
-        Route::get('files', [FileController::class, 'index'])->name('.files');
-        Route::get('tags', [TagController::class, 'index'])->name('.tags');
+        Route::get('users', [UserController::class, 'index'])->name('users');
+        Route::get('files', [FileController::class, 'index'])->name('files');
+        Route::get('tags', [TagController::class, 'index'])->name('tags');
         Route::get('files/{file}', [FileController::class, 'show'])->name('show.files');
-        Route::get('plans', [PlanController::class, 'index'])->name('.plans');
+        Route::get('plans', [PlanController::class, 'index'])->name('plans');
         Route::get('plans/{plan:title}', [PlanController::class, 'show'])->name('show.plans');
         Route::get('categories', [CategoryController::class, 'index'])->name('categories');
         Route::get('apply-voucher-code', [VoucherController::class], 'apply')->name('apply.voucher.code');

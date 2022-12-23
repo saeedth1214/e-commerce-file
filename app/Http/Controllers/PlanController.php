@@ -56,8 +56,8 @@ class PlanController extends Controller
                 AllowedFilter::custom('rebate', new FilterBySpecialValue),
                 AllowedFilter::custom('daily_download_limit_count', new FilterBySpecialValue),
                 AllowedFilter::custom('created_at', new FilterByDateTime),
-                AllowedFilter::custom('unique', new FilterUniqueValue)
-
+                AllowedFilter::custom('unique', new FilterUniqueValue),
+                AllowedFilter::scope('user_id', 'userId')
             ])->allowedIncludes([
                 AllowedInclude::count('users')
             ])

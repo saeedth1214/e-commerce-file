@@ -16,7 +16,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\QueryBuilder\AllowedSort;
-use App\Filters\SortByRebateDecsending;
 use App\Filters\GetSameFilesWithTags;
 use App\Filters\SortByPopular;
 use App\Filters\SortBySelling;
@@ -65,6 +64,7 @@ class FileController extends Controller
                 AllowedFilter::scope('category', 'categoryId'),
                 AllowedFilter::scope('category_name', 'categoryName'),
                 AllowedFilter::scope('tag_id', 'tagId'),
+                AllowedFilter::scope('user_id', 'userId'),
             ])->allowedSorts([
                 AllowedSort::custom('bestSelling', new SortBySelling),
                 AllowedSort::custom('mostPopular', new SortByPopular),

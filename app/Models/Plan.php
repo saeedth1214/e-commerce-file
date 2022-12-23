@@ -72,4 +72,8 @@ class Plan extends Model implements HasMedia
     {
         return $query->with('comments.user')->paginate($per_page);
     }
+    public function scopeUserId(Builder $query, int $user_id)
+    {
+        return $query->whereHas('users', fn ($query) => $query->where('user_id', $user_id));
+    }
 }

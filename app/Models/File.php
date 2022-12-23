@@ -101,4 +101,8 @@ class File extends Model implements HasMedia, ReactableInterface
     {
         return $query->whereHas('tags', fn ($query) => $query->where('tag_id', $tagId));
     }
+    public function scopeUserId(Builder $query, int $user_id)
+    {
+        return $query->whereHas('users', fn ($query) => $query->where('user_id', $user_id));
+    }
 }
