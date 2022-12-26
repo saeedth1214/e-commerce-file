@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use App\Models\Voucher;
+use Illuminate\Support\Facades\DB;
 
 class CategoryTableSeeder extends Seeder
 {
@@ -15,6 +15,29 @@ class CategoryTableSeeder extends Seeder
      */
     public function run()
     {
-        Category::factory(5)->create();
+
+        // Category::factory(5)->create();
+
+        $categories = [
+            [
+                'name' => 'ورزشی',
+                'slug' => 'sport'
+            ],
+            [
+                'name' => 'خانوادگی',
+                'slug' => 'family'
+            ], [
+                'name' => 'هنر',
+                'slug' => 'art'
+            ], [
+                'name' => 'طبیعت',
+                'slug' => 'Nature'
+            ], [
+                'name' => 'کتاب',
+                'slug' => 'books'
+            ],
+
+        ];
+        DB::table('categories')->insert($categories);
     }
 }
