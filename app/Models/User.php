@@ -98,10 +98,6 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
         return static::query()->where($type, $value)->first();
     }
 
-    public function reactions()
-    {
-    }
-
     public function orders()
     {
 
@@ -110,6 +106,6 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
 
     public function activePlan()
     {
-        return $this->plans()->where('pivot', 'expired_at', '>=', now());
+        return $this->plans()->wherePivot('expired_at', '>=', now())->first();
     }
 }

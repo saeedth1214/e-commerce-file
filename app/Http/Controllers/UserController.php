@@ -145,7 +145,7 @@ class UserController extends Controller
                 $pivot->id => [
                     'access' => 0,
                     'activation_at' => now(),
-                    'amount' => $this->calculate($pivot),
+                    'amount' => $this->calculateRebate($pivot),
                     'expired_at' => now()->addDays($pivot->activation_days),
                     'bought_at' => now(),
                 ]

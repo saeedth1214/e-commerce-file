@@ -78,7 +78,9 @@ class UserTransformer extends TransformerAbstract
     }
     public function IncludeActivePlan(User $user)
     {
-        $plan = $user->activePlan()->first();
+        
+        $plan = $user->activePlan();
+        // dd($plan);
         if (!$plan) {
 
             return $this->null();
