@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\TemporaryUrlEnum;
+
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class GenerateTemporaryUrlRequest extends FormRequest
 {

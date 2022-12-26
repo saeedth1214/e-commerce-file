@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait HasUserName
+trait HasUsername
 {
     /**
      * Check username is mobile or email.
