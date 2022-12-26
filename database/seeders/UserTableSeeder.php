@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoleEnum;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -23,6 +24,7 @@ class UserTableSeeder extends Seeder
             'email_verified_at' => now(),            
             'first_name' => 'saeed',
             'last_name' => 'soltani',
+            'role'=>UserRoleEnum::ADMIN
         ]);
     }
 }
