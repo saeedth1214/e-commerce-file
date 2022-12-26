@@ -66,7 +66,7 @@ class RegisterController extends Controller
     
     public function sendVerificationCode($email, $code)
     {
-        return SendVerificationCodeJob::dispatch($email, $code);
+        return SendVerificationCodeJob::dispatchSync($email, $code);
     }
 
 

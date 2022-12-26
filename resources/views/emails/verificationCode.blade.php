@@ -5,8 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('template.css') }}">
     <title>Document</title>
+
+    <style>
+        body {
+            font-family: 'Arial';
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        .mail-body {
+            width: 500px;
+            height: 400px;
+            border: 1px solid #d7d7d7;
+            padding-top: 1rem;
+            border-radius: 5px;
+            margin: 1rem auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .icon {
+            width: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px auto;
+            border: 2px solid #0066ff;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .btn {
+            width: 200px;
+            height: 40px;
+            background: #5050ff;
+            color: #fff;
+            letter-spacing: 4px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+        }
+
+        footer {
+            width: 100%;
+            position: absolute;
+            bottom: 0px;
+            background: #53c6fd;
+            padding-top: 0.7rem;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+    </style>
 
 </head>
 
@@ -14,8 +69,8 @@
 
     <div class="mail-body">
         <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#4974ff"
-                class="bi bi-envelope-at" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#4974ff" class="bi bi-envelope-at"
+                viewBox="0 0 16 16">
                 <path
                     d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
                 <path

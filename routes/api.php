@@ -18,7 +18,9 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\TagController;
 
 // auth route
-Route::prefix('auth')->as('auth')->middleware([
+Route::prefix('auth')
+        ->as('auth')
+        ->middleware([
     'guest',
     'throttle:20',
 ])->group(function () {
@@ -29,14 +31,20 @@ Route::prefix('auth')->as('auth')->middleware([
     Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword'])->name('.user.forget-password');
     Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('.user.change-password');
 });
-Route::prefix('auth')->as('auth')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('auth')
+                ->as('auth')
+                ->middleware(['auth:sanctum'])
+                ->group(function () {
     Route::post('logout', [LogoutController::class, 'logout'])->name('.user.logout');
     Route::get('user', [LoginController::class, 'current_user'])->name('.user.current_user');
     Route::post('refresh', [RefreshTokenController::class, 'refreshToken'])->name('.user.token.refresh');
 });
 // end auth route
 //panel route
-Route::prefix('panel')->as('panel.')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('panel')
+            ->as('panel.')
+            ->middleware(['auth:sanctum'])
+            ->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('users', UserController::class);
     Route::apiResource('plans', PlanController::class);
