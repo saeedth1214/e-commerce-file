@@ -35,10 +35,6 @@ class UpdateUserRequest extends FormRequest
             ],
             'files' => 'sometimes|array',
             'files.*' => 'sometimes|integer|exists:files,id',
-            'plan_id' => [
-                'nullable',
-                'integer',
-            ],
         ];
     }
 }

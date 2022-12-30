@@ -15,6 +15,6 @@ use BenSampo\Enum\Enum;
  */
 final class AccessTypeEnum extends Enum
 {
-    const AdminAdded = 0;
-    const Payment = 1;
+    const AdminAdded = 1;
+    const Payment = 2;
 }

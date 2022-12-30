@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PlanStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +23,7 @@ class CreateUserHasPlansTable extends Migration
             $table->timestamp('expired_at');
             $table->tinyInteger('access')->default(1);
             $table->timestamp('bought_at');
+            $table->tinyInteger('status')->default(PlanStatusEnum::ACTIVE);
             $table->index(['user_id', 'plan_id']);
         });
     }

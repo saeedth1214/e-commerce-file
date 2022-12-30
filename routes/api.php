@@ -19,65 +19,67 @@ use App\Http\Controllers\TagController;
 
 // auth route
 Route::prefix('auth')
-        ->as('auth')
-        ->middleware([
-    'guest',
-    'throttle:20',
-])->group(function () {
-    Route::post('login', [LoginController::class, 'handle'])->name('.user.login.handle');
-    Route::post('resend', [RegisterController::class, 'resend'])->name('.user.resend');
-    Route::post('verify', [RegisterController::class, 'verify'])->name('.user.verify');
-    Route::post('register', [RegisterController::class, 'handle'])->name('.user.register');
-    Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword'])->name('.user.forget-password');
-    Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('.user.change-password');
-});
+    ->as('auth')
+    ->middleware([
+        'guest',
+        'throttle:20',
+    ])->group(function () {
+        Route::post('login', [LoginController::class, 'handle'])->name('.user.login.handle');
+        Route::post('resend', [RegisterController::class, 'resend'])->name('.user.resend');
+        Route::post('verify', [RegisterController::class, 'verify'])->name('.user.verify');
+        Route::post('register', [RegisterController::class, 'handle'])->name('.user.register');
+        Route::post('forget-password', [ForgetPasswordController::class, 'forgetPassword'])->name('.user.forget-password');
+        Route::post('change-password', [ForgetPasswordController::class, 'changePassword'])->name('.user.change-password');
+    });
 Route::prefix('auth')
-                ->as('auth')
-                ->middleware(['auth:sanctum'])
-                ->group(function () {
-    Route::post('logout', [LogoutController::class, 'logout'])->name('.user.logout');
-    Route::get('user', [LoginController::class, 'current_user'])->name('.user.current_user');
-    Route::post('refresh', [RefreshTokenController::class, 'refreshToken'])->name('.user.token.refresh');
-});
+    ->as('auth')
+    ->middleware(['auth:sanctum'])
+    ->group(function () {
+        Route::post('logout', [LogoutController::class, 'logout'])->name('.user.logout');
+        Route::get('user', [LoginController::class, 'current_user'])->name('.user.current_user');
+        Route::post('refresh', [RefreshTokenController::class, 'refreshToken'])->name('.user.token.refresh');
+    });
 // end auth route
 //panel route
 Route::prefix('panel')
-            ->as('panel.')
-            ->middleware(['auth:sanctum'])
-            ->group(function () {
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('users', UserController::class);
-    Route::apiResource('plans', PlanController::class);
-    Route::apiResource('files', FileController::class);
-    Route::apiResource('comments', CommentController::class)->only(['index', 'show', 'destroy']);
-    Route::apiResource('orders', OrderController::class)->except(['update']);
-    Route::apiResource('vouchers', VoucherController::class);
-    Route::apiResource('tags', TagController::class);
-    Route::post('users/{user}/change-avatar', [UserController::class, 'changeAvatar'])->whereNumber('id')->name('.users.avatar');
-    Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->whereNumber('id')->name('.users.password');
-    Route::post('files/{file}/upload-media', [FileController::class, 'uploadFileMedia'])->whereNumber('id')->name('.files.media');
-    Route::post('plans/{plan}/upload-media', [PlanController::class, 'uploadFileMedia'])->whereNumber('id')->name('.plans.media');
-    Route::post('categories/{category}/upload-media', [CategoryController::class, 'uploadFileMedia'])->whereNumber('id')->name('.category.media');
-    //file comments
-    Route::post('files/{file}/comments', [FileController::class, 'assignComment'])->name('file.comment');
-    Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');
-    Route::patch('files/{file}/generate-download-link', [FileController::class, 'generateS3TemporaryUrl'])->name('file.generate.download.link');
-
-    //plan comments
-    Route::post('plans/{plan}/comments', [PlanController::class, 'assignComment'])->name('plan.comment');
-    Route::put('plans/{plan}/comments/{comment}', [PlanController::class, 'updateComment'])->name('plan.update.comment');
-    // assign vouchers to user
-    Route::post('users/{user}/assign-vouchers', [UserController::class, 'assignVouchers'])->name('user.assign-vouchers');
-    //apply voucher
-    Route::post('vouchers/apply-voucher', [VoucherController::class, 'apply'])->name('voucher.apply');
-
-    //dashboard details 
-    Route::get('dashboard/details', [DashboardController::class, 'details'])->name('dashboard.details');
-    //dashboard latest orders 
-    Route::get('dashboard/latest-orders', [DashboardController::class, 'latestOrders'])->name('dashboard.latest.orders');
-    //dashboard latest comments 
-    Route::get('dashboard/latest-comments', [DashboardController::class, 'latestComments'])->name('dashboard.latest.comments');
-});
+    ->as('panel.')
+    ->middleware(['auth:sanctum'])
+    ->group(function () {
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('plans', PlanController::class);
+        Route::apiResource('files', FileController::class);
+        Route::apiResource('comments', CommentController::class)->only(['index', 'show', 'destroy']);
+        Route::apiResource('orders', OrderController::class)->except(['update']);
+        Route::apiResource('vouchers', VoucherController::class);
+        Route::apiResource('tags', TagController::class);
+        Route::post('users/{user}/change-avatar', [UserController::class, 'changeAvatar'])->whereNumber('id')->name('.users.avatar');
+        Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->whereNumber('id')->name('.users.password');
+        Route::post('files/{file}/upload-media', [FileController::class, 'uploadFileMedia'])->whereNumber('id')->name('.files.media');
+        Route::post('plans/{plan}/upload-media', [PlanController::class, 'uploadFileMedia'])->whereNumber('id')->name('.plans.media');
+        Route::post('categories/{category}/upload-media', [CategoryController::class, 'uploadFileMedia'])->whereNumber('id')->name('.category.media');
+        //file comments
+        Route::post('files/{file}/comments', [FileController::class, 'assignComment'])->name('file.comment');
+        Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');
+        Route::patch('files/{file}/generate-download-link', [FileController::class, 'generateS3TemporaryUrl'])->name('file.generate.download.link');
+        //user plan
+        Route::post('users/{user}/plans', [UserController::class, 'assignPlan'])->name('user.assign.plan');
+        Route::put('users/{user}/plans/{plan}/de-activate', [UserController::class, 'deActivatePlan'])->name('user.inActive.plan');
+        Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');
+        //plan comments
+        Route::post('plans/{plan}/comments', [PlanController::class, 'assignComment'])->name('plan.comment');
+        Route::put('plans/{plan}/comments/{comment}', [PlanController::class, 'updateComment'])->name('plan.update.comment');
+        // assign vouchers to user
+        Route::post('users/{user}/assign-vouchers', [UserController::class, 'assignVouchers'])->name('user.assign-vouchers');
+        //apply voucher
+        Route::post('vouchers/apply-voucher', [VoucherController::class, 'apply'])->name('voucher.apply');
+        //dashboard details 
+        Route::get('dashboard/details', [DashboardController::class, 'details'])->name('dashboard.details');
+        //dashboard latest orders 
+        Route::get('dashboard/latest-orders', [DashboardController::class, 'latestOrders'])->name('dashboard.latest.orders');
+        //dashboard latest comments 
+        Route::get('dashboard/latest-comments', [DashboardController::class, 'latestComments'])->name('dashboard.latest.comments');
+    });
 // end panel route
 // profile route
 Route::prefix('user')

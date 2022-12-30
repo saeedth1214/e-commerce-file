@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PlanStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Notifications\SendVerificationCodeNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
 use Qirolab\Laravel\Reactions\Traits\Reacts;
@@ -67,7 +69,8 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
     }
     public function plans()
     {
-        return $this->belongsToMany(Plan::class, 'user_has_plans')->withPivot(['amount', 'activation_at', 'expired_at', 'bought_at']);
+        return $this->belongsToMany(Plan::class, 'user_has_plans')
+            ->withPivot(['amount', 'activation_at', 'expired_at', 'bought_at', 'status']);
     }
 
     public function comments()
@@ -106,6 +109,16 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
 
     public function activePlan()
     {
-        return $this->plans()->wherePivot('expired_at', '>=', now())->first();
+        return $this->plans()
+            ->wherePivot('expired_at', '>=', now())
+            ->wherePivot('status', PlanStatusEnum::ACTIVE)
+            ->first();
+    }
+
+
+    public function deActivatePlan(int $planId)
+    {
+        return $this->plans()
+            ->updateExistingPivot($planId, ['status' => PlanStatusEnum::INACTIVE]);
     }
 }

@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HandleLoginRequest;
 use App\Models\User;
 use App\Traits\HasToken;
-use App\Traits\HasUsername;
+use App\Traits\HasUserName;
 use Illuminate\Support\Facades\Hash;
 use App\Transformers\UserTransformer;
 
 class LoginController extends Controller
 {
     use HasToken;
-    use HasUsername;
+    use HasUserName;
 
     public function handle(HandleLoginRequest $request)
     {

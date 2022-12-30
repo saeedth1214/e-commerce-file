@@ -20,8 +20,12 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\UserIndexRequest;
 use App\Filters\FilterUniqueValue;
 use App\Enums\AccessTypeEnum;
+use App\Enums\PlanStatusEnum;
+use App\Http\Requests\AssignPlanRequest;
 use App\Http\Requests\AssignVoucherToUserRequest;
 use App\Traits\AmountAfterModelRebate;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -135,30 +139,7 @@ class UserController extends Controller
             );
             $user->files()->sync($attachments);
         }
-        //assign plans
-        if ($request->filled('plan_id')) {
-            $plan = $request->input('plan_id');
 
-            $callback = fn ($pivot)
-            =>
-            [
-                $pivot->id => [
-                    'access' => 0,
-                    'activation_at' => now(),
-                    'amount' => $this->calculateRebate($pivot),
-                    'expired_at' => now()->addDays($pivot->activation_days),
-                    'bought_at' => now(),
-                ]
-            ];
-            $attachments = $this->attachingPivots(
-                Plan::query(),
-                [$plan],
-                $callback
-            );
-            $user->plans()->syncWithoutDetaching($attachments);
-        } else if (!$request->filled('Plan_id')) {
-            $user->activePlan()->sync($request->input('plan_id'));
-        }
         return apiResponse()->empty();
     }
 
@@ -228,16 +209,6 @@ class UserController extends Controller
 
         return $attachments->toArray();
     }
-    // private function calculate($model)
-    // {
-    //     if (!$model->rebate) {
-    //         return $model->amount;
-    //     }
-    //     if ($model->rebate && $model->percentage) {
-    //         return $model->amount - ($model->amount * ($model->rebate / 100));
-    //     }
-    //     return $model->amount - $model->rebate;
-    // }
 
     public function assignVouchers(AssignVoucherToUserRequest $request, User $user)
     {
@@ -258,5 +229,68 @@ class UserController extends Controller
         $user->vouchers()->sync($attachments);
 
         return apiResponse()->empty();
+    }
+
+    public function assignPlan(AssignPlanRequest $request, User $user)
+    {
+        $plan = $request->input('plan_id');
+        $callback = fn ($pivot)
+        =>
+        [
+            $pivot->id => [
+                'access' => AccessTypeEnum::AdminAdded,
+                'activation_at' => now(),
+                'amount' => $this->calculateRebate($pivot),
+                'expired_at' => now()->addDays($pivot->activation_days),
+                'bought_at' => now(),
+                'status' => PlanStatusEnum::ACTIVE
+            ]
+        ];
+        $attachments = $this->attachingPivots(
+            Plan::query(),
+            [$plan],
+            $callback
+        );
+        $user->plans()->syncWithoutDetaching($attachments);
+
+        return apiResponse()->empty();
+    }
+
+
+    public function deActivatePlan(User $user, int $planId)
+    {
+
+        $activePlan = $user->activePlan();
+
+        if (!$activePlan) {
+
+            return apiResponse()->message('.در حال حاضر طرح فعالی وجود ندارد')->fail();
+        }
+        $user->deActivatePlan($planId);
+
+        return apiResponse()->empty();
+    }
+
+    public function activePlan(User $user)
+    {
+
+        $plan = $user->activePlan();
+
+        if (!$plan) {
+
+            return apiResponse()->message('.در حال حاضر طرح فعالی وجود ندارد')->fail();
+        }
+
+        $expired_at = Carbon::parse($plan->pivot->expired_at);
+        $current_date = Carbon::parse(now());
+
+        $days_left = $expired_at->diffInDays($current_date);
+        $planDetails = [
+            'id' => $plan->id,
+            'title' => $plan->title,
+            'days_left' => $days_left
+        ];
+
+        return apiResponse()->content($planDetails)->success();
     }
 }
