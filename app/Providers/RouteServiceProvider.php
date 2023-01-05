@@ -50,7 +50,13 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('file', function ($value) {
-            return File::query()->where('id', $value)->orWhere('title', '=', $value)->firstOrFail();
+            $query = File::query();
+            
+            $regex = '/\d+/';
+
+            $column = preg_match($regex, $value) ?  'id' : 'title';
+
+            return $query->where($column, $value)->firstOrFail();
         });
     }
 
