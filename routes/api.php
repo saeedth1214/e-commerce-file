@@ -113,5 +113,6 @@ Route::prefix('frontend')
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('files/{file}/reactions', [FileController::class, 'toggleReaction'])->name('file.reaction');
             Route::post('files/{file}/download', [FileController::class, 'download'])->name('file.download');
+            Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');
         });
     });

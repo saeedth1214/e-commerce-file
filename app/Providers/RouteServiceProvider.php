@@ -51,8 +51,8 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('file', function ($value) {
             $query = File::query();
-            
-            $regex = '/\d+/';
+
+            $regex = '/^[0-9]+$/';
 
             $column = preg_match($regex, $value) ?  'id' : 'title';
 

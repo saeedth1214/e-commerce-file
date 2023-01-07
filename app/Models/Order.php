@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Order extends Model
 {
@@ -19,6 +20,14 @@ class Order extends Model
         'total_amount_after_rebate_code',
         'status',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($order) {
+            Cache::forget('latest-orders');
+            Cache::forget('dashboardDetails');
+        });
+    }
 
     public function user()
     {

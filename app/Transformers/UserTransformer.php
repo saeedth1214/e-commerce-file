@@ -80,7 +80,7 @@ class UserTransformer extends TransformerAbstract
     {
         
         $plan = $user->activePlan();
-        // dd($plan);
+    
         if (!$plan) {
 
             return $this->null();

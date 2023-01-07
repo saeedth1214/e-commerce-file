@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\DailyFileDownloadEvent;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use App\Events\SendVerificationCodeEvent;
+use App\Listeners\DailyFileDownloadListener;
 use App\Listeners\SendVerificationCodeListener;
 
 class EventServiceProvider extends ServiceProvider
@@ -19,9 +21,13 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        
-        SendVerificationCodeEvent::class=>[
+
+        SendVerificationCodeEvent::class => [
             SendVerificationCodeListener::class
+        ],
+
+        DailyFileDownloadEvent::class => [
+            DailyFileDownloadListener::class
         ]
     ];
 

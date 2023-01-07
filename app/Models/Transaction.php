@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Transaction extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -20,6 +21,14 @@ class Transaction extends Model
         'status',
         'payed_at',
     ];
+
+    protected static function booted()
+    {
+
+        static::creating(function ($transaction) {
+            Cache::forget('dashboardDetails');
+        });
+    }
 
     public function order()
     {

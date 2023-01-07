@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Notifications\SendVerificationCodeNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
 use Qirolab\Laravel\Reactions\Traits\Reacts;
 
@@ -55,6 +56,14 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
         'email_verified_at' => 'datetime',
         'mobile_verified_at' => 'datetime'
     ];
+
+    protected static function booted()
+    {
+
+        static::creating(function ($user) {
+            Cache::forget('dashboardDetails');
+        });
+    }
     public function files()
     {
         return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount', 'bought_at']);

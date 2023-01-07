@@ -278,7 +278,7 @@ class UserController extends Controller
 
         if (!$plan) {
 
-            return apiResponse()->message('.در حال حاضر طرح فعالی وجود ندارد')->fail();
+            return apiResponse()->message('.در حال حاضر طرح فعالی وجود ندارد')->success();
         }
 
         $expired_at = Carbon::parse($plan->pivot->expired_at);

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Qirolab\Laravel\Reactions\Traits\Reactable;
 
@@ -25,6 +26,16 @@ class Comment extends Model implements ReactableInterface
     protected $attributes = [
         'status' => 0,
     ];
+
+    protected static function booted()
+    {
+
+        static::creating(function ($model) {
+            Cache::forget('latest-comments');
+        });
+    }
+
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -63,9 +63,10 @@ class DashboardController extends Controller
          */
         $comments = Cache::remember('latest-comments', 86400, function () {
             return Comment::query()->with('user')->latest()
-                ->whereBetween('created_at', [Carbon::today()->subMonths(2), Carbon::today()])
+                ->whereBetween('created_at', [Carbon::today()->subMonths(2), Carbon::now()])
                 ->get();
         });
+
         return fractal()
             ->collection($comments)
             ->transformWith(CommentTransformer::class)

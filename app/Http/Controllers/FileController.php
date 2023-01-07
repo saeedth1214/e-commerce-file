@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DailyFileDownloadEvent;
 use App\Http\Requests\StoreFileRequest;
 use App\Traits\FilterQueryBuilder;
 use App\Models\File;
@@ -23,6 +24,8 @@ use App\Http\Requests\GenerateTemporaryUrlRequest;
 use App\Http\Requests\StoreFileCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Transformers\CommentTransformer;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -135,6 +138,7 @@ class FileController extends Controller
      */
     public function update(UpdateFileRequest $request, File $file): JsonResponse
     {
+
         /**
          * @methods('PUT', PATCH')
          * @uri('/api/panel/files/{file}')
@@ -252,6 +256,7 @@ class FileController extends Controller
 
     public function download(EnsureUserHasFileRequest $request, File $file)
     {
+
         try {
             if (is_null($file->link)) {
                 return apiResponse()->message('This file not found.')->fail();
@@ -262,9 +267,17 @@ class FileController extends Controller
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
-            return apiResponse()->content(compact('url'))->success();
+
+            // handle daily download count
+            Event::dispatch(new DailyFileDownloadEvent($file));
+
+            // return apiResponse()->content(compact('url'))->success();
         } catch (\Throwable $th) {
-            return apiResponse()->message($th->getMessage())->status(500)->fail();
+            $statusCode = 500;
+            if ($th instanceof HttpResponseException) {
+                $statusCode = $th->getResponse()->getStatusCode();
+            }
+            return apiResponse()->message($th->getMessage())->status($statusCode)->fail();
         }
     }
 
