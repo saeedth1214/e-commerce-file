@@ -10,7 +10,7 @@ use App\Transformers\CategoryTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
-use App\Http\Requests\changeCategoryMediaRequest;
+use App\Http\Requests\ChangeCategoryMediaRequest;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -98,7 +98,7 @@ class CategoryController extends Controller
     }
 
 
-    public function uploadFileMedia(changeCategoryMediaRequest $request, Category $category)
+    public function uploadFileMedia(ChangeCategoryMediaRequest $request, Category $category)
     {
         /**
          * @post('/api/panel/categories/{category}/upload-media')
