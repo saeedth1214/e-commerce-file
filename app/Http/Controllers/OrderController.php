@@ -81,6 +81,9 @@ class OrderController extends Controller
         if ($request->has('plan_id')) {
             $order_data['plan_id'] = $request->input('plan_id');
             $plan = Plan::query()->find($request->input('plan_id'));
+            $order_data['activation_at'] = now();
+            $order_data['expired_at'] = now()->addDays($plan->activation_days);
+
             $total_amount += $this->calculateRebate($plan);
             $total_items++;
         }
