@@ -24,7 +24,7 @@ class ChangeCategoryMediaRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'nullable|mimes:jpeg,jpg,png,gif|max:2048',
+            'file' => 'nullable|mimes:jpeg,jpg,png,gif,webp|max:2048',
         ];
     }
 }
