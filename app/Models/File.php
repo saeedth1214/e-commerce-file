@@ -73,7 +73,7 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'file_has_tags', 'tag_id', 'file_id');
+        return $this->belongsToMany(Tag::class, 'file_has_tags');
     }
 
     public function comments()
