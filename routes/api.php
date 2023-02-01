@@ -91,6 +91,9 @@ Route::prefix('user')
         Route::put('profile', 'update')->name('.update');
         Route::post('profile/change-avatar', 'changeAvatar')->name('.avatar');
         Route::post('profile/change-password', 'changePassword')->name('.password');
+        Route::get('profile/plans', 'plans')->name('.plans');
+        Route::get('profile/files', 'files')->name('.files');
+        Route::get('profile/orders', 'orders')->name('.orders');
     });
 //end profile route
 
@@ -116,3 +119,12 @@ Route::prefix('frontend')
             Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');
         });
     });
+
+
+Route::get('truncate', function () {
+
+    // dd(auth()->user()->plans());
+    // auth()->user()->orders()->delete();
+    // auth()->user()->plans()->delete();
+    // auth()->user()->files()->delete();
+});

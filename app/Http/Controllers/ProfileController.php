@@ -6,16 +6,24 @@ use App\Transformers\UserTransformer;
 use App\Http\Requests\UpdateProfileDetailRequest;
 use App\Http\Requests\UpdateProfileAvatarRequest;
 use App\Http\Requests\UpdateProfilePasswordRequest;
+use App\Transformers\FileTransformer;
+use App\Transformers\OrderTransformer;
+use App\Transformers\PlanTransformer;
 use Illuminate\Support\Facades\Hash;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class ProfileController extends Controller
 {
+    /**
+     * @var User $user
+     */
     private $user;
 
     public function __construct()
     {
+
         $this->user = auth()->user();
     }
     public function show()
@@ -82,5 +90,42 @@ class ProfileController extends Controller
         $this->user->update(compact('password'));
 
         return apiResponse()->empty();
+    }
+
+    public function plans()
+    {
+
+        $plans = $this->user->plans()->paginate();
+
+        return fractal()
+            ->collection($plans)
+            ->withResourceName('plans')
+            ->transformWith(PlanTransformer::class)
+            ->paginateWith(new IlluminatePaginatorAdapter($plans))
+            ->respond();
+    }
+    public function files()
+    {
+
+        $files = $this->user->files()->paginate();
+
+        return fractal()
+            ->collection($files)
+            ->withResourceName('files')
+            ->transformWith(FileTransformer::class)
+            ->paginateWith(new IlluminatePaginatorAdapter($files))
+            ->respond();
+    }
+    public function orders()
+    {
+
+        $orders = $this->user->orders()->paginate();
+
+        return fractal()
+            ->collection($orders)
+            ->withResourceName('orders')
+            ->transformWith(OrderTransformer::class)
+            ->paginateWith(new IlluminatePaginatorAdapter($orders))
+            ->respond();
     }
 }

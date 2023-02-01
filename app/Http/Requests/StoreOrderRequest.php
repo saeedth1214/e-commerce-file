@@ -25,14 +25,14 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'voucher_id' => 'sometimes|required|integer|exists:vouchers,id',
-            'plan_id' => 'sometimes|required|integer|exists:plans,id',
+            'voucher_id' => 'sometimes|required|integer|exists:vouchers,id,deleted_at,NULL',
+            'plan_id' => 'sometimes|required|integer|exists:plans,id,deleted_at,NULL',
             'files' => 'sometimes|required|array',
             'files.*' => [
                 'sometimes',
                 'required',
                 'integer',
-                Rule::exists('files', 'id')->where('sale_as_single', 1)
+                Rule::exists('files', 'id')->where('sale_as_single', 1)->whereNull('deleted_at')
             ]
         ];
     }
