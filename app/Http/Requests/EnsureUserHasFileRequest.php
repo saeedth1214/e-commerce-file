@@ -19,10 +19,7 @@ class EnsureUserHasFileRequest extends FormRequest
     {
         $fileId = $this->file->id;
 
-        $count = User::query()->whereHas('files', function ($query) use ($fileId) {
-            $query->where('file_id', $fileId);
-        })->where('id', auth()->id())
-            ->count();
+        $count = User::query()->userHasThisFile(auth()->id(),$fileId);
         // the user have bought this file .
         if ($count) {
             return $count;

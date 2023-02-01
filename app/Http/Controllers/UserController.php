@@ -293,4 +293,14 @@ class UserController extends Controller
 
         return apiResponse()->content($planDetails)->success();
     }
+
+
+    public function userHasFile(int $userId, int $fileId)
+    {
+
+
+        $count = User::query()->userHasThisFile($userId, $fileId);
+
+        return apiResponse()->content(['count' => $count])->success();
+    }
 }

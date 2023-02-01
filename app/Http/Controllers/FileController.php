@@ -271,7 +271,7 @@ class FileController extends Controller
             // handle daily download count
             Event::dispatch(new DailyFileDownloadEvent($file));
 
-            // return apiResponse()->content(compact('url'))->success();
+            return apiResponse()->content(compact('url'))->success();
         } catch (\Throwable $th) {
             $statusCode = 500;
             if ($th instanceof HttpResponseException) {
