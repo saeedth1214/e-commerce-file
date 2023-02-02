@@ -265,7 +265,7 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            if (!Storage::exists($file_without_ext.'.eps')) {
+            if (!Storage::exists($file_without_ext . '.eps')) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
@@ -273,6 +273,7 @@ class FileController extends Controller
             // handle daily download count
             Event::dispatch(new DailyFileDownloadEvent($file));
 
+            File::query()->where('id', $file->id)->increment('download_count');
             return apiResponse()->content(compact('url'))->success();
         } catch (\Throwable $th) {
             $statusCode = 500;
