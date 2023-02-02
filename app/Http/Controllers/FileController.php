@@ -264,8 +264,8 @@ class FileController extends Controller
             $file_name = $file->getMedia('file-image')[0]->file_name;
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
-        
-            if (!Storage::exists($file_without_ext)) {
+
+            if (!Storage::exists($file_without_ext.'.eps')) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
@@ -296,7 +296,10 @@ class FileController extends Controller
 
         $file_name = $file->getMedia('file-image')[0]->file_name;
 
-        $url = Storage::temporaryUrl($file_name, now()->addSeconds($expirationTime));
+        $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
+
+
+        $url = Storage::temporaryUrl($file_without_ext . '.eps', now()->addSeconds($expirationTime));
 
         $file->update([
             'link' => $url
