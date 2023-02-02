@@ -263,7 +263,9 @@ class FileController extends Controller
             }
             $file_name = $file->getMedia('file-image')[0]->file_name;
 
-            if (!Storage::exists($file_name)) {
+            $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
+        
+            if (!Storage::exists($file_without_ext)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
