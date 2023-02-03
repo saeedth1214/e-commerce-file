@@ -265,7 +265,7 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            if (!Storage::exists($file_without_ext . '.eps')) {
+            if (!Storage::exists($file_without_ext . '.eps') || !Storage::exists($file_without_ext . '.psd')) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
