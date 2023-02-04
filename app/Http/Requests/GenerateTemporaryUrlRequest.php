@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-
+use App\Enums\FileFormatEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GenerateTemporaryUrlRequest extends FormRequest
 {
@@ -25,7 +26,8 @@ class GenerateTemporaryUrlRequest extends FormRequest
     public function rules()
     {
         return [
-            'expiration_time' => 'required|integer|min:0|max:604800'
+            'expiration_time' => 'required|integer|min:0|max:604800',
+            'format' => ['required', 'integer', Rule::in(FileFormatEnum::asArray())]
         ];
     }
 }

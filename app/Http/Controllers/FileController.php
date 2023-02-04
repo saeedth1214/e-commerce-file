@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\FileFormatEnum;
 use App\Events\DailyFileDownloadEvent;
 use App\Http\Requests\StoreFileRequest;
 use App\Traits\FilterQueryBuilder;
@@ -265,7 +266,7 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            if (!Storage::exists($file_without_ext . '.eps') && !Storage::exists($file_without_ext . '.psd')) {
+            if (!Storage::exists($file_without_ext .'.' .FileFormatEnum::asString(FileFormatEnum::EPS)) && !Storage::exists($file_without_ext .'.'.FileFormatEnum::asString(FileFormatEnum::PSD))) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
@@ -273,7 +274,9 @@ class FileController extends Controller
             // handle daily download count
             Event::dispatch(new DailyFileDownloadEvent($file));
 
+            // increment download count of file when user download it
             File::query()->where('id', $file->id)->increment('download_count');
+
             return apiResponse()->content(compact('url'))->success();
         } catch (\Throwable $th) {
             $statusCode = 500;
@@ -299,8 +302,7 @@ class FileController extends Controller
 
         $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-
-        $url = Storage::temporaryUrl($file_without_ext . '.eps', now()->addSeconds($expirationTime));
+        $url = Storage::temporaryUrl($file_without_ext .'.'.FileFormatEnum::asString($request->format), now()->addSeconds($expirationTime));
 
         $file->update([
             'link' => $url
