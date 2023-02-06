@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use Intervention\Image\Facades\Image;
-use phpDocumentor\Reflection\Types\This;
 
 class ImageOptimizerCommand extends Command
 {
