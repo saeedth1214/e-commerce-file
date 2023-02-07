@@ -56,9 +56,9 @@ class ImageOptimizerCommand extends Command
             $images = glob($folder_path . '/*.{jpg,jpeg,png,gif,webp}', GLOB_BRACE);
 
             foreach ($images as $image) {
-                $img = Image::make($image)->resize(300, 200);
-                // save file as jpg with medium quality
-                $img->save($image, 60);
+                $img = Image::make($image)
+                // ->resize(300, 200)
+                ->save($image, 60);
             }
         }
 

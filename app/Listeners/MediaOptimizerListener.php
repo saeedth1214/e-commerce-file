@@ -26,7 +26,8 @@ class MediaOptimizerListener
     {
         $media = $event->media;
         $path = $media->getPath();
-        $img = Image::make($path)->resize(300, 200);
-        $img->save($path, 60);
+        Image::make($path)
+            ->resize(300, 200)
+            ->save($path, 60);
     }
 }
