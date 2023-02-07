@@ -10,8 +10,12 @@ use BenSampo\Enum\Enum;
  */
 final class FileFormatEnum extends Enum
 {
-    const EPS =   0;
-    const PSD =   1;
+    const EPS =   1;
+    const AL =    2;
+    const JPG =   3;
+    const PNG =   4;
+    const JPEG =  5;
+    const PSD =   6;
 
 
     public static function asString(int $enumValue)
