@@ -34,7 +34,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::in(UserRoleEnum::asArray())
             ],
             'files' => 'sometimes|array',
-            'files.*' => 'sometimes|integer|exists:files,id',
+            'files.*' => 'sometimes|integer|exists:files,id,deleted_at,NULL',
         ];
     }
 }

@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 use App\Models\Attribute;
+use App\Traits\FilterQueryBuilder;
 use App\Transformers\AttributeTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
 class AttributeController extends Controller
 {
+    use FilterQueryBuilder;
+
     /**
      * Display a listing of the resource.
      *
@@ -24,6 +27,7 @@ class AttributeController extends Controller
                 'slug',
             ])
             ->paginate($per_page);
+            
         return fractal()
             ->collection($attributes)
             ->withResourceName('attributes')

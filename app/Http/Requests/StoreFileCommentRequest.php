@@ -26,7 +26,7 @@ class StoreFileCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'parent_id' => 'nullable|integer|exists:comments,id',
+            'parent_id' => 'nullable|integer|exists:comments,id,deleted_at,NULL',
             'content' => 'required|string',
             'status' => [
                 'sometimes',

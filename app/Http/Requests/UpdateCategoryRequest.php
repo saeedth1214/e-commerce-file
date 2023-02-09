@@ -24,6 +24,7 @@ class UpdateCategoryRequest extends FormRequest
     public function rules()
     {
         return [
+            'parent_id' => 'nullable|integer|exists:categories,id,deleted_at,NULL',
             'name' => 'required|string|min:2|max:256',
             'slug' => 'required|string|min:2|max:256',
         ];

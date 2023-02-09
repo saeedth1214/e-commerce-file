@@ -11,6 +11,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
 use App\Http\Requests\ChangeCategoryMediaRequest;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -42,6 +43,12 @@ class CategoryController extends Controller
                 'name',
                 'slug',
                 AllowedFilter::custom('created_at', new FilterByDateTime),
+                AllowedFilter::callback('parentIs', function (Builder $query, $value) {
+                    $query->whereNull('parent_id');
+                }),
+                AllowedFilter::callback('parentNot', function (Builder $query, $value) {
+                    $query->whereNotNull('parent_id');
+                }),
             ])
             ->allowedSorts(['files_count'])
             ->paginate($per_page);

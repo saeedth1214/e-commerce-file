@@ -22,6 +22,8 @@ class CategoryTransformer extends TransformerAbstract
     {
         return [
             'id' => $category->id,
+            'parent_name' => $category->sub_category?->name,
+            'parent_id' => $category->parent_id,
             'name' => $category->name,
             'slug' => $category->slug,
             'media' => $this->getMediaUrl($category),

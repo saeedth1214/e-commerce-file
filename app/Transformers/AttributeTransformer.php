@@ -24,7 +24,7 @@ class AttributeTransformer extends TransformerAbstract
     public function transform(Attribute $attribute)
     {
         return [
-
+            'id' => $attribute->id,
             'slug' => $attribute->slug,
             'name' => $attribute->name,
         ];

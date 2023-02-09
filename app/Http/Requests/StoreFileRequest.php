@@ -30,7 +30,7 @@ class StoreFileRequest extends FormRequest
             'sale_as_single' => 'required|boolean',
             'rebate' => $this->input('percentage') ? 'nullable|integer|min:0|max:100' : 'nullable|integer|min:0|max:4294967295',
             'amount' => 'required|integer|min:0|max:4294967295',
-            'category_id' => 'required|integer|exists:categories,id',
+            'category_id' => 'required|integer|exists:categories,id,deleted_at,NULL',
         ];
     }
 }

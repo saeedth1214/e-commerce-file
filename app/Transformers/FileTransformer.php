@@ -13,6 +13,7 @@ use App\Models\File;
 use League\Fractal\TransformerAbstract;
 use App\Traits\ConvertDateTime;
 use App\Traits\AmountAfterModelRebate;
+use Illuminate\Support\Facades\Redis;
 
 class FileTransformer extends TransformerAbstract
 {
@@ -37,10 +38,12 @@ class FileTransformer extends TransformerAbstract
             'amount' => $file->amount,
             'rebate' => $file->rebate,
             'download_count' => $file->download_count,
+            'views' => Redis::get($file->title . ':count'),
             'media_url' => $this->getMediaUrl($file),
             'title' => $file->title,
             'reaction_summary' => $file->reactionSummary(),
             'category_id' => $file->category_id,
+            'category_name' => $file->category?->name,
             'amount_after_rebate' => $this->calculateRebate($file),
             'amount_after_rebate_code' => optional($file->pivot)->amount,
             'bought_at' => $this->convertToMilai(optional($file->pivot)->bought_at),

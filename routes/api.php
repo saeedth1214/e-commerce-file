@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
@@ -53,6 +54,7 @@ Route::prefix('panel')
         Route::apiResource('orders', OrderController::class)->except(['update']);
         Route::apiResource('vouchers', VoucherController::class);
         Route::apiResource('tags', TagController::class);
+        Route::apiResource('attributes', AttributeController::class);
         Route::post('users/{user}/change-avatar', [UserController::class, 'changeAvatar'])->whereNumber('id')->name('.users.avatar');
         Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->whereNumber('id')->name('.users.password');
         Route::post('files/{file}/upload-media', [FileController::class, 'uploadFileMedia'])->whereNumber('id')->name('.files.media');
@@ -104,7 +106,7 @@ Route::prefix('frontend')
         Route::get('users', [UserController::class, 'index'])->name('users');
         Route::get('files', [FileController::class, 'index'])->name('files');
         Route::get('tags', [TagController::class, 'index'])->name('tags');
-        Route::get('files/{file}', [FileController::class, 'show'])->name('show.files');
+        Route::get('files/{file}', [FileController::class, 'show'])->middleware('viewerCounter')->name('show.files');
         Route::get('plans', [PlanController::class, 'index'])->name('plans');
         Route::get('plans/{plan:title}', [PlanController::class, 'show'])->name('show.plans');
         Route::get('categories', [CategoryController::class, 'index'])->name('categories');
