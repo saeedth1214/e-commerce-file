@@ -27,6 +27,7 @@ class AttributeTransformer extends TransformerAbstract
             'id' => $attribute->id,
             'slug' => $attribute->slug,
             'name' => $attribute->name,
+            'type_id'=>$attribute->type,
         ];
     }
 }

@@ -15,7 +15,7 @@ class CreateAttributesValuesTable extends Migration
     {
         Schema::create('attributes_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attribute_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('attribute_id')->constrained('attributes')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('file_id')->constrained('files')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('value', 255);
         });

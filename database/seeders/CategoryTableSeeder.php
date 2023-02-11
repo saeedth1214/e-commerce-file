@@ -14,26 +14,14 @@ class CategoryTableSeeder extends Seeder
      */
     public function run()
     {
-
-        // Category::factory(5)->create();
-
         $categories = [
             [
-                'name' => 'ورزشی',
-                'slug' => 'sport'
+                'name' => 'طراحی',
+                'slug' => 'designs'
             ],
             [
-                'name' => 'خانوادگی',
-                'slug' => 'family'
-            ], [
-                'name' => 'هنر',
-                'slug' => 'art'
-            ], [
-                'name' => 'طبیعت',
-                'slug' => 'Nature'
-            ], [
-                'name' => 'کتاب',
-                'slug' => 'books'
+                'name' => 'تصاویر',
+                'slug' => 'photose'
             ],
 
         ];

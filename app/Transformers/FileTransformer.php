@@ -9,11 +9,13 @@
 
 namespace App\Transformers;
 
+use App\Enums\AttributeTypeEnum;
 use App\Models\File;
 use League\Fractal\TransformerAbstract;
 use App\Traits\ConvertDateTime;
 use App\Traits\AmountAfterModelRebate;
 use Illuminate\Support\Facades\Redis;
+use phpDocumentor\Reflection\Types\This;
 
 class FileTransformer extends TransformerAbstract
 {
@@ -25,7 +27,8 @@ class FileTransformer extends TransformerAbstract
         'tags',
         'users',
         'comments',
-        'mainComments'
+        'mainComments',
+        'attributes'
     ];
 
     public function transform(File $file)
@@ -96,5 +99,17 @@ class FileTransformer extends TransformerAbstract
     public function IncludeMainComments(File $file)
     {
         return $this->collection($file->mainComments, new CommentTransformer());
+    }
+
+    public function IncludeAttributes(File $file)
+    {
+
+        $attributes = $file->attributes;
+        return $this->collection($attributes, fn ($attribute) => [
+            'id' => $attribute->id,
+            'name' => $attribute->name,
+            'type' => AttributeTypeEnum::getKey($attribute->type),
+            'value' => $attribute->pivot->value
+        ]);
     }
 }

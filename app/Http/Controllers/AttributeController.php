@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AttributeTypeEnum;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 use App\Models\Attribute;
@@ -27,12 +28,19 @@ class AttributeController extends Controller
                 'slug',
             ])
             ->paginate($per_page);
-            
+
+        $types = [];
+
+        foreach (AttributeTypeEnum::asArray() as $key => $value) {
+            $types[] = ['key' => $key, 'value' => $value];
+        }
+
         return fractal()
             ->collection($attributes)
             ->withResourceName('attributes')
             ->paginateWith(new IlluminatePaginatorAdapter($attributes))
             ->transformWith(AttributeTransformer::class)
+            ->addMeta(['types'=>$types])
             ->toArray();
     }
 

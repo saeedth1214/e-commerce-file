@@ -10,13 +10,10 @@ class Attribute extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug', 'type_id'];
 
-    protected $created_at = null;
-    protected $updated_at = null;
     public function files()
     {
-
-        return $this->belongsToMany(File::class, 'attributes_values', 'attribute_id', 'file_id');
+        return $this->belongsToMany(File::class, 'attributes_values', 'attribute_id', 'file_id')->withPivot(['value']);
     }
 }

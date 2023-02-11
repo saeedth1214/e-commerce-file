@@ -20,6 +20,7 @@ use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Spatie\QueryBuilder\AllowedSort;
 use App\Filters\SortByPopular;
 use App\Filters\SortBySelling;
+use App\Http\Requests\AssignAttributeRequest;
 use App\Http\Requests\EnsureUserHasFileRequest;
 use App\Http\Requests\GenerateTemporaryUrlRequest;
 use App\Http\Requests\StoreFileCommentRequest;
@@ -28,6 +29,7 @@ use App\Transformers\CommentTransformer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
+use phpDocumentor\Reflection\Types\This;
 
 class FileController extends Controller
 {
@@ -266,7 +268,7 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            if (!Storage::exists($file_without_ext .'.' .FileFormatEnum::asString(FileFormatEnum::EPS)) && !Storage::exists($file_without_ext .'.'.FileFormatEnum::asString(FileFormatEnum::PSD))) {
+            if (!Storage::exists($file_without_ext . '.' . FileFormatEnum::asString(FileFormatEnum::EPS)) && !Storage::exists($file_without_ext . '.' . FileFormatEnum::asString(FileFormatEnum::PSD))) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
@@ -302,12 +304,38 @@ class FileController extends Controller
 
         $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-        $url = Storage::temporaryUrl($file_without_ext .'.'.FileFormatEnum::asString($request->format), now()->addSeconds($expirationTime));
+        $url = Storage::temporaryUrl($file_without_ext . '.' . FileFormatEnum::asString($request->format), now()->addSeconds($expirationTime));
 
         $file->update([
             'link' => $url
         ]);
 
         return apiResponse()->empty();
+    }
+
+
+    public function assignAttributes(AssignAttributeRequest $request, File $file)
+    {
+        $attributes = $request->input('attributes');
+        $callback = fn ($pivot) => [
+            $pivot['id'] => ['value' => $pivot['value']]
+        ];
+
+        $attachments = $this->attachingPivots($attributes, $callback);
+        $file->attributes()->sync($attachments);
+
+        return apiResponse()->empty();
+    }
+
+    private function attachingPivots($pivots, $callback)
+    {
+        if (!count($pivots)) {
+            return $pivots;
+        }
+        $attchments = collect($pivots)
+            ->mapToGroups($callback)
+            ->map(fn ($groups) => $groups->first());
+
+        return $attchments->toArray();
     }
 }

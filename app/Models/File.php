@@ -105,4 +105,9 @@ class File extends Model implements HasMedia, ReactableInterface
     {
         return $query->whereHas('users', fn ($query) => $query->where('user_id', $user_id));
     }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'attributes_values', 'file_id', 'attribute_id')->withPivot(['value']);
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AttributeTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAttributeRequest extends FormRequest
 {
@@ -26,6 +28,11 @@ class StoreAttributeRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:256',
             'slug' => 'required|string|min:2|max:256',
+            'type' => [
+                'required',
+                'integer',
+                Rule::in(AttributeTypeEnum::asArray())
+            ]
         ];
     }
 }

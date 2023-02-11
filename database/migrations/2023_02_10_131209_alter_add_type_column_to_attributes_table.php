@@ -1,10 +1,11 @@
 <?php
 
+use App\Enums\AttributeTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttributesTable extends Migration
+class AlterAddTypeColumnToAttributesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,8 @@ class CreateAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attributes', function (Blueprint $table) {
-            $table->id();
-            $table->string('slug', 255);
-            $table->string('name', 255);
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('attributes', function (Blueprint $table) {
+            $table->tinyInteger('type')->default(AttributeTypeEnum::NUMBER);
         });
     }
 
@@ -30,7 +27,7 @@ class CreateAttributesTable extends Migration
     public function down()
     {
         Schema::table('attributes', function (Blueprint $table) {
-            $table->dropIfExists();
+            $table->dropColumn('type');
         });
     }
 }
