@@ -15,14 +15,15 @@ use League\Fractal\TransformerAbstract;
 class CategoryTransformer extends TransformerAbstract
 {
     protected array $availableIncludes = [
-        'files'
+        'files',
+        'subCategories'
     ];
 
     public function transform(Category $category)
     {
         return [
             'id' => $category->id,
-            'parent_name' => $category->sub_category?->name,
+            'parent_name' => $category->parent?->name,
             'parent_id' => $category->parent_id,
             'name' => $category->name,
             'slug' => $category->slug,
@@ -36,6 +37,18 @@ class CategoryTransformer extends TransformerAbstract
     }
     public function IncludeFiles(Category $category)
     {
-        return $this->collection($category->files, fn ($file) => ['id' => $file->id, 'title' => $file->title, 'media' => $file->getFirstMediaUrl('file-image')]);
+        return $this->collection(
+            $category->files,
+            fn ($file) => [
+                'id' => $file->id,
+                'title' => $file->title,
+                'media' => $file->getFirstMediaUrl('file-image')
+            ]
+        );
+    }
+
+    public function IncludeSubCategories(Category $category)
+    {
+        return $this->collection($category->subCategories, new self());
     }
 }

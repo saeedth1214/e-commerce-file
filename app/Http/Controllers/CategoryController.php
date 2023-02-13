@@ -53,13 +53,12 @@ class CategoryController extends Controller
             ->allowedSorts(['files_count'])
             ->paginate($per_page);
 
-
         return fractal()
             ->collection($categories)
             ->withResourceName('categories')
-            ->paginateWith(new IlluminatePaginatorAdapter($categories))
             ->transformWith(CategoryTransformer::class)
-            ->toArray();
+            ->paginateWith(new IlluminatePaginatorAdapter($categories))
+            ->respond();
     }
 
     /**

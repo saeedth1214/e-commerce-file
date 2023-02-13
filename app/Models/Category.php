@@ -27,8 +27,12 @@ class Category extends Model implements HasMedia
         $this->addMediaCollection('category-image')->singleFile();
     }
 
-    public function sub_category()
+    public function subCategories()
     {
-        return $this->belongsTo(static::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
+    }
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
     }
 }

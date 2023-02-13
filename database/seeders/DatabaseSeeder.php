@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // UserTableSeeder::class,
             // VoucherTableSeeder::class,
-            // CategoryTableSeeder::class,
+            CategoryTableSeeder::class,
             // TagSeeder::class,
-            AttributeTableSeeder::class
+            // AttributeTableSeeder::class
         ]);
     }
 }
