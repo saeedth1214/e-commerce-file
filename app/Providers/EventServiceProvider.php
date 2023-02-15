@@ -31,10 +31,8 @@ class EventServiceProvider extends ServiceProvider
         DailyFileDownloadEvent::class => [
             DailyFileDownloadListener::class
         ],
-
-        MediaHasBeenAdded::class=>[
-
-            MediaOptimizerListener::class
+        MediaHasBeenAdded::class => [
+            // MediaOptimizerListener::class
         ]
     ];
 
