@@ -10,6 +10,7 @@
 namespace App\Transformers;
 
 use App\Enums\AttributeTypeEnum;
+use App\Enums\FileFormatEnum;
 use App\Models\File;
 use League\Fractal\TransformerAbstract;
 use App\Traits\ConvertDateTime;
@@ -109,7 +110,7 @@ class FileTransformer extends TransformerAbstract
             'id' => $attribute->id,
             'name' => $attribute->name,
             'type' => AttributeTypeEnum::getKey($attribute->type),
-            'value' => $attribute->pivot->value
+            'value' => $attribute->type === AttributeTypeEnum::FORMAT ?  FileFormatEnum::asString($attribute->pivot->value) : $attribute->pivot->value
         ]);
     }
 }
