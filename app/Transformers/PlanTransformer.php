@@ -38,9 +38,9 @@ class PlanTransformer extends TransformerAbstract
             'activation_days' => $plan->activation_days,
             'amount_after_rebate' => (int) $this->calculateRebate($plan),
             'amount_after_rebate_code' => (int)optional($plan->pivot)->amount,
-            'bought_at' => $this->convertToMilai(optional($plan->pivot)->bought_at),
-            'activation_at' => $this->convertToMilai(optional($plan->pivot)->activation_at),
-            'expired_at' => $this->convertToMilai(optional($plan->pivot)->expired_at),
+            'bought_at' => $this->shamsiDate(optional($plan->pivot)->bought_at),
+            'activation_at' => $this->shamsiDate(optional($plan->pivot)->activation_at),
+            'expired_at' => $this->shamsiDate(optional($plan->pivot)->expired_at),
             'has_been_expired' =>  $this->hasBeenExpired(optional($plan->pivot)->expired_at),
             'media_url' => $this->getMediaUrl($plan),
             'usersCount' => $plan->users_count ?? $plan->users->count()

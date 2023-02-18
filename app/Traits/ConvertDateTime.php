@@ -6,7 +6,7 @@ use Hekmatinasser\Verta\Facades\Verta;
 
 trait ConvertDateTime
 {
-    protected function convertToMilai(?string $dateTime)
+    protected function shamsiDate(?string $dateTime)
     {
         if (!$dateTime) {
             return;

@@ -24,6 +24,7 @@ use App\Enums\PlanStatusEnum;
 use App\Http\Requests\AssignPlanRequest;
 use App\Http\Requests\AssignVoucherToUserRequest;
 use App\Traits\AmountAfterModelRebate;
+use App\Traits\ConvertDateTime;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,7 @@ class UserController extends Controller
 {
     use FilterQueryBuilder;
     use AmountAfterModelRebate;
+    use ConvertDateTime;
     /**
      * Display a listing of the resource.
      *
@@ -288,6 +290,8 @@ class UserController extends Controller
         $planDetails = [
             'id' => $plan->id,
             'title' => $plan->title,
+            'amount' => $plan->pivot->amount,
+            'bought_at' => $this->shamsiDate($plan->pivot->bought_at),
             'days_left' => $days_left
         ];
 

@@ -50,8 +50,8 @@ class FileTransformer extends TransformerAbstract
             'category_name' => $file->category?->name,
             'amount_after_rebate' => $this->calculateRebate($file),
             'amount_after_rebate_code' => optional($file->pivot)->amount,
-            'bought_at' => $this->convertToMilai(optional($file->pivot)->bought_at),
-            'created_at' => $this->convertToMilai($file->created_at)
+            'bought_at' => $this->shamsiDate(optional($file->pivot)->bought_at),
+            'created_at' => $this->shamsiDate($file->created_at)
         ];
 
         return auth('sanctum')->check() ? $data + ['is_reacted' => $file->is_reacted] : $data;
@@ -88,7 +88,7 @@ class FileTransformer extends TransformerAbstract
             => [
                 'user_id' => optional($file->pivot)->user_id,
                 'amount_after_rebate' => optional($file->pivot)->amount,
-                'bought_at' => $this->convertToMilai(optional($file->pivot)->bought_at)
+                'bought_at' => $this->shamsiDate(optional($file->pivot)->bought_at)
             ]
         );
     }

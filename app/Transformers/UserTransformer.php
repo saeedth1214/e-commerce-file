@@ -38,9 +38,9 @@ class UserTransformer extends TransformerAbstract
             'media_url' => $this->getMediaUrl($user),
             'role' => UserRoleEnum::getDescription(UserRoleEnum::getKey($user->role)),
             'role_id' => $user->role,
-            'email_verified_at' =>  $this->convertToMilai($user->email_verified_at),
-            'mobile_verified_at' => $this->convertToMilai($user->mobile_verified_at),
-            'created_at' => $this->convertToMilai($user->created_at),
+            'email_verified_at' =>  $this->shamsiDate($user->email_verified_at),
+            'mobile_verified_at' => $this->shamsiDate($user->mobile_verified_at),
+            'created_at' => $this->shamsiDate($user->created_at),
         ];
     }
 

@@ -31,8 +31,8 @@ class VoucherTransformer extends TransformerAbstract
             'status' => $voucher->status,
             'type_id' => $voucher->type,
             'type_text' => VoucherTypeEnum::getDescription(VoucherTypeEnum::getKey($voucher->type)),
-            'expired_at' => $this->ConvertToMilai($voucher->expired_at),
-            'created_at' => $this->ConvertToMilai($voucher->created_at),
+            'expired_at' => $this->shamsiDate($voucher->expired_at),
+            'created_at' => $this->shamsiDate($voucher->created_at),
             'number_authorize_use' => optional($voucher->pivot)->number_authorize_use,
             'number_times_use' => optional($voucher->pivot)->number_times_use
         ];

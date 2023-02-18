@@ -48,7 +48,7 @@ class OrderTransformer extends TransformerAbstract
             'percentage' => optional($order->voucher)->percentage,
             'status_dec' => OrderTypeEnum::getDescription(OrderTypeEnum::getKey($order->status)),
             'status' => $order->status,
-            'created_at' => $this->ConvertToMilai($order->created_at),
+            'created_at' => $this->shamsiDate($order->created_at),
         ];
     }
 
