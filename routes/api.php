@@ -65,7 +65,7 @@ Route::prefix('panel')
         Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');
         Route::patch('files/{file}/generate-download-link', [FileController::class, 'generateS3TemporaryUrl'])->name('file.generate.download.link');
         Route::post('files/{file}/attributes', [FileController::class, 'assignAttributes'])->name('file.attributes');
-        
+
         //user plan
         Route::post('users/{user}/plans', [UserController::class, 'assignPlan'])->name('user.assign.plan');
         Route::put('users/{user}/plans/{plan}/de-activate', [UserController::class, 'deActivatePlan'])->name('user.inActive.plan');
@@ -108,10 +108,12 @@ Route::prefix('frontend')
         Route::get('users', [UserController::class, 'index'])->name('users');
         Route::get('files', [FileController::class, 'index'])->name('files');
         Route::get('tags', [TagController::class, 'index'])->name('tags');
+        Route::get('files/most-visited', [FileController::class, 'mostVisited'])->name('files.most_visited');
         Route::get('files/{file}', [FileController::class, 'show'])->middleware('viewerCounter')->name('show.files');
         Route::get('plans', [PlanController::class, 'index'])->name('plans');
         Route::get('plans/{plan:title}', [PlanController::class, 'show'])->name('show.plans');
         Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+        Route::get('categories/menubar', [CategoryController::class, 'menubar'])->name('categories.menubar');
         Route::get('apply-voucher-code', [VoucherController::class], 'apply')->name('apply.voucher.code');
         Route::get('plans/{plan}/comments', [PlanController::class, 'CommentsOfPlan'])->name('plan.comments');
         Route::get('files/{file}/comments', [FileController::class, 'CommentsOfFile'])->name('file.comments');
