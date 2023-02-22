@@ -9,7 +9,8 @@ use App\Traits\FilterQueryBuilder;
 use App\Models\File;
 use App\Transformers\FileTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Filters\FilterBySpecialValue;
+use App\Filters\FilterDiscountedFiles;
+use App\Filters\FilterFreeFiles;
 use App\Filters\FilterUniqueValue;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UpdateFileRequest;
@@ -17,9 +18,6 @@ use App\Http\Requests\StoreFileMediaRequest;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
-use Spatie\QueryBuilder\AllowedSort;
-use App\Filters\SortByPopular;
-use App\Filters\SortBySelling;
 use App\Http\Requests\AssignAttributeRequest;
 use App\Http\Requests\EnsureUserHasFileRequest;
 use App\Http\Requests\GenerateTemporaryUrlRequest;
@@ -29,7 +27,6 @@ use App\Transformers\CommentTransformer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
-use phpDocumentor\Reflection\Types\This;
 
 class FileController extends Controller
 {
@@ -63,18 +60,14 @@ class FileController extends Controller
                 AllowedFilter::custom('unique', new FilterUniqueValue),
                 AllowedFilter::exact('sale_as_single'),
                 AllowedFilter::exact('percentage'),
-                AllowedFilter::custom('amount', new FilterBySpecialValue),
-                AllowedFilter::custom('rebate', new FilterBySpecialValue),
+                AllowedFilter::custom('amount', new FilterFreeFiles),
+                AllowedFilter::custom('rebate', new FilterDiscountedFiles),
                 AllowedFilter::scope('category', 'categoryId'),
                 AllowedFilter::scope('category_name', 'categoryName'),
                 AllowedFilter::scope('tag_id', 'tagId'),
+                AllowedFilter::scope('type'),
+                AllowedFilter::scope('tag_name','tagName'),
                 AllowedFilter::scope('user_id', 'userId'),
-            ])->allowedSorts([
-                AllowedSort::custom('bestSelling', new SortBySelling),
-                AllowedSort::custom('mostPopular', new SortByPopular),
-                'rebate',
-                'created_at',
-                'amount',
             ])->paginate($per_page);
 
         return fractal()
