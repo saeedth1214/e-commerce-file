@@ -164,4 +164,17 @@ class CategoryController extends Controller
         $category->delete();
         return apiResponse()->empty();
     }
+
+
+    public function menubar()
+    {
+        $categories = Category::query()->whereNull('parent_id')->get();
+
+
+        return fractal()
+            ->collection($categories)
+            ->withResourceName('categories')
+            ->transformWith(CategoryTransformer::class)
+            ->respond();;
+    }
 }
