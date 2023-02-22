@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\AttributeTypeEnum;
 use App\Enums\CommentStatusEnum;
+use App\Enums\FileFormatEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -136,5 +138,14 @@ class File extends Model implements HasMedia, ReactableInterface
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attributes_values', 'file_id', 'attribute_id')->withPivot(['value']);
+    }
+
+    public function scopeFormat(Builder $query, $format)
+    {
+        return $query->join('attributes_values', 'files.id', '=', 'attributes_values.file_id')
+            ->join('attributes', 'attributes.id', '=', 'attributes_values.attribute_id')
+            ->select('files.*', 'attributes.type', 'attributes_values.value')
+            ->where('type', AttributeTypeEnum::FORMAT)
+            ->where('value', $format);
     }
 }

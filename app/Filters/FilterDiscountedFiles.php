@@ -9,10 +9,10 @@ class FilterDiscountedFiles implements Filter
 {
     public function __invoke(Builder $query, $value, string $property)
     {
-        if ($value !== 'discounted') {
-            $query->where($property, 0);
-        } else {
+        if ($value) {
             $query->where($property, '>', 0);
+        } else {
+            $query->where($property, 0);
         }
     }
 }

@@ -11,6 +11,7 @@ use App\Transformers\FileTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterDiscountedFiles;
 use App\Filters\FilterFreeFiles;
+use App\Filters\FilterPublishedFiles;
 use App\Filters\FilterUniqueValue;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UpdateFileRequest;
@@ -60,14 +61,16 @@ class FileController extends Controller
                 AllowedFilter::custom('unique', new FilterUniqueValue),
                 AllowedFilter::exact('sale_as_single'),
                 AllowedFilter::exact('percentage'),
-                AllowedFilter::custom('amount', new FilterFreeFiles),
+                AllowedFilter::custom('free', new FilterFreeFiles),
                 AllowedFilter::custom('rebate', new FilterDiscountedFiles),
                 AllowedFilter::scope('category', 'categoryId'),
                 AllowedFilter::scope('category_name', 'categoryName'),
                 AllowedFilter::scope('tag_id', 'tagId'),
                 AllowedFilter::scope('type'),
+                AllowedFilter::scope('format'),
                 AllowedFilter::scope('tag_name', 'tagName'),
                 AllowedFilter::scope('user_id', 'userId'),
+                AllowedFilter::custom('published', new FilterPublishedFiles),
             ])->paginate($per_page);
 
         return fractal()

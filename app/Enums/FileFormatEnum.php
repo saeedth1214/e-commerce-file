@@ -5,8 +5,12 @@ namespace App\Enums;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static PSD()
  * @method static static EPS()
+ * @method static static AL()
+ * @method static static JPG()
+ * @method static static PNG()
+ * @method static static JPEG()
+ * @method static static PSD()
  */
 final class FileFormatEnum extends Enum
 {
