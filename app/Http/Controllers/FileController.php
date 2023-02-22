@@ -66,7 +66,7 @@ class FileController extends Controller
                 AllowedFilter::scope('category_name', 'categoryName'),
                 AllowedFilter::scope('tag_id', 'tagId'),
                 AllowedFilter::scope('type'),
-                AllowedFilter::scope('tag_name','tagName'),
+                AllowedFilter::scope('tag_name', 'tagName'),
                 AllowedFilter::scope('user_id', 'userId'),
             ])->paginate($per_page);
 
@@ -330,5 +330,13 @@ class FileController extends Controller
             ->map(fn ($groups) => $groups->first());
 
         return $attchments->toArray();
+    }
+
+
+    public function mostVisited()
+    {
+        $mostVisitedFiles = File::query()->mostVisited();
+
+        return apiResponse()->content(['most-visited' => $mostVisitedFiles])->success();
     }
 }

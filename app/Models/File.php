@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Redis;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Qirolab\Laravel\Reactions\Traits\Reactable;
 use Spatie\MediaLibrary\HasMedia;
@@ -112,6 +113,24 @@ class File extends Model implements HasMedia, ReactableInterface
     public function scopeUserId(Builder $query, int $user_id)
     {
         return $query->whereHas('users', fn ($query) => $query->where('user_id', $user_id));
+    }
+
+    public function scopeMostVisited()
+    {
+        $files = Redis::zRange('view-counter', 0, 6, true);
+
+        $grouped = collect($files)->maptoGroups(function ($view, $key) {
+
+            return [
+                $key => [
+                    'title' => Redis::hGet($key, 'title'),
+                    'category_name' => Redis::hGet($key, 'category_name'),
+                    'views' => $view
+                ],
+            ];
+        })->map(fn ($group) => $group->first());
+
+        return $grouped->toArray();
     }
 
     public function attributes()
