@@ -17,8 +17,17 @@ class ViewerCounter
      */
     public function handle(Request $request, Closure $next)
     {
-        Redis::incr($request->file->title . ':count', 1);
+        $file = $request->file;
+        $categoryName = $file->category->name;
+        $key= $file->id;
+        Redis::hSetNx($key,'title',$file->title);
+        Redis::hSetNx($key,'category_name',$categoryName);
+        Redis::hSetNx($key,'id',$file->id);
+        Redis::hINCRBY($key,'views',1);
+     
+        $views = Redis::hGet($key,'views');
 
+        Redis::zAdd('view-counter',$views,$key);
         return $next($request);
     }
 }

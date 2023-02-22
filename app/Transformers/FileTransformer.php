@@ -42,7 +42,7 @@ class FileTransformer extends TransformerAbstract
             'amount' => $file->amount,
             'rebate' => $file->rebate,
             'download_count' => $file->download_count,
-            'views' => Redis::get($file->title . ':count'),
+            'views' => $this->getViews($file->id),
             'media_url' => $this->getMediaUrl($file),
             'title' => $file->title,
             'reaction_summary' => $file->reactionSummary(),
@@ -70,6 +70,10 @@ class FileTransformer extends TransformerAbstract
         return $file->getFirstMediaUrl('file-image');
     }
 
+    public function getViews($id)
+    {
+        return Redis::hGet($id,'views');
+    }
 
     public function getFileTitle($file)
     {
