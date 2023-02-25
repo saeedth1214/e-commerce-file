@@ -28,51 +28,56 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'parent_id' => 1,
-                'name' => '  بک گراند',
-                'slug' => 'Backgrounds  ',
+                'name' => 'بک گراند',
+                'slug' => 'Backgrounds',
             ],
             [
                 'parent_id' => 1,
-                'name' => ' پوستر',
-                'slug' => 'Posters  ',
+                'name' => 'پوستر',
+                'slug' => 'Posters',
             ],
             [
                 'parent_id' => 1,
-                'name' => ' بنر',
-                'slug' => 'Banners  ',
+                'name' => 'بنر',
+                'slug' => 'Banners',
             ],
             [
                 'parent_id' => 1,
-                'name' => '  لوگو',
-                'slug' => 'Logos  ',
+                'name' => 'لوگو',
+                'slug' => 'Logos',
             ],
             [
                 'parent_id' => 1,
-                'name' => '  کارت تبریک',
-                'slug' => 'Greeting Card  ',
+                'name' => 'موکاپ',
+                'slug' => 'Mockups',
+            ],
+            [
+                'parent_id' => 1,
+                'name' => 'کارت تبریک',
+                'slug' => 'Greeting Card',
             ],
 
             [
                 'parent_id' => 2,
-                'name' => '  طبیعت',
-                'slug' => 'Nature  ',
+                'name' => 'طبیعت',
+                'slug' => 'Nature',
             ],
             [
                 'parent_id' => 2,
-                'name' => '  غذا و نوشیدنی',
-                'slug' => 'Food & Drink ',
-            ],
-
-            [
-                'parent_id' => 2,
-                'name' => ' ورزشی',
-                'slug' => 'Sport ',
+                'name' => 'غذا و نوشیدنی',
+                'slug' => 'Food & Drink',
             ],
 
             [
                 'parent_id' => 2,
-                'name' => ' صنعت و تکلولوژی',
-                'slug' => 'Industry & technology ',
+                'name' => 'ورزشی',
+                'slug' => 'Sport',
+            ],
+
+            [
+                'parent_id' => 2,
+                'name' => 'صنعت و تکلولوژی',
+                'slug' => 'Industry & technology',
             ],
 
         ];
