@@ -15,7 +15,7 @@ class AlterAddTypeColumnToAttributesTable extends Migration
     public function up()
     {
         Schema::table('attributes', function (Blueprint $table) {
-            $table->tinyInteger('type')->default(AttributeTypeEnum::NUMBER);
+            $table->tinyInteger('type');
         });
     }
 
