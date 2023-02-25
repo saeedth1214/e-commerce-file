@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Unit;
+
+
 use App\Enums\PlanStatusEnum;
 use App\Models\User;
 use Tests\TestCase;

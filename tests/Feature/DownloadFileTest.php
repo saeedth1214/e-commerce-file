@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Feature;
+
+
 use App\Enums\UserRoleEnum;
 use App\Events\DailyFileDownloadEvent;
 use App\Models\Category;
