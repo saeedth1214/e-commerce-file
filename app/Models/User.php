@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Notifications\SendVerificationCodeNotification;
+use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
@@ -57,16 +58,13 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
         'mobile_verified_at' => 'datetime'
     ];
 
-    protected static function booted()
+    protected static function boot()
     {
-
-        static::creating(function ($user) {
-            Cache::forget('dashboardDetails');
-        });
+        User::observe(UserObserver::class);
     }
     public function files()
     {
-        return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount','amount_after_voucher_code','voucher_id' ,'bought_at']);
+        return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount', 'amount_after_voucher_code', 'voucher_id', 'bought_at']);
     }
     public function vouchers()
     {
@@ -131,7 +129,7 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
             ->updateExistingPivot($planId, ['status' => PlanStatusEnum::INACTIVE]);
     }
 
-    public  function scopeUserHasThisFile(Builder $query,int $userId, int $fileId)
+    public  function scopeUserHasThisFile(Builder $query, int $userId, int $fileId)
     {
         return static::whereHas('files', function ($query) use ($fileId) {
             $query->where('files.id', $fileId);

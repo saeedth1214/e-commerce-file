@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,12 +21,9 @@ class Order extends Model
         'status',
     ];
 
-    protected static function booted()
+    protected static function boot()
     {
-        static::creating(function ($order) {
-            Cache::forget('latest-orders');
-            Cache::forget('dashboardDetails');
-        });
+        Order::observe(OrderObserver::class);
     }
 
     public function user()

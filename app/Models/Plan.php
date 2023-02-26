@@ -26,13 +26,6 @@ class Plan extends Model implements HasMedia
         'activation_days',
     ];
 
-    public static function boot(): void
-    {
-        parent::boot();
-        static::deleting(function ($plan) {
-            $plan->comments()->delete();
-        });
-    }
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_has_plans');

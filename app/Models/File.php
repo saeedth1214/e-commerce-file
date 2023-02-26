@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AttributeTypeEnum;
 use App\Enums\CommentStatusEnum;
 use App\Enums\FileFormatEnum;
+use App\Observers\FileObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,10 +36,7 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public static function boot(): void
     {
-        parent::boot();
-        static::deleting(function ($file) {
-            $file->comments()->delete();
-        });
+       File::observe(FileObserver::class);
     }
 
     public function plans()
