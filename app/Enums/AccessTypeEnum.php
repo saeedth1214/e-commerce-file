@@ -10,11 +10,11 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 /**
- * @method static static AdminAdded()
+ * @method static static AdminHaveAdded()
  * @method static static Payment()
  */
 final class AccessTypeEnum extends Enum
 {
-    const AdminAdded = 1;
+    const AdminHaveAdded = 1;
     const Payment = 2;
 }

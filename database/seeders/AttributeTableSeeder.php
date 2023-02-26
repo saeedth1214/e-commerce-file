@@ -15,6 +15,7 @@ class AttributeTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('attributes')->truncate();
         $attributes = [
             [
                 "slug" => "Aspect Ratio",

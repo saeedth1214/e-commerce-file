@@ -14,7 +14,7 @@ class CategoryTableSeeder extends Seeder
      */
     public function run()
     {
-        // DB::table('categories')->truncate();
+        DB::table('categories')->truncate();
         $categories = [
             [
                 'parent_id' => null,
@@ -56,7 +56,11 @@ class CategoryTableSeeder extends Seeder
                 'name' => 'کارت تبریک',
                 'slug' => 'Greeting Card',
             ],
-
+            [
+                'parent_id' => 1,
+                'name' => 'کارت ویزیت کسب و کار',
+                'slug' => 'Business Card',
+            ],
             [
                 'parent_id' => 2,
                 'name' => 'طبیعت',
@@ -76,7 +80,7 @@ class CategoryTableSeeder extends Seeder
 
             [
                 'parent_id' => 2,
-                'name' => 'صنعت و تکلولوژی',
+                'name' => 'صنعت و تکنولوژی',
                 'slug' => 'Industry & technology',
             ],
 

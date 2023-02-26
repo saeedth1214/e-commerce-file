@@ -37,7 +37,7 @@ class PlanTransformer extends TransformerAbstract
             'daily_download_limit_count' => $plan->daily_download_limit_count,
             'activation_days' => $plan->activation_days,
             'amount_after_rebate' => (int) $this->calculateRebate($plan),
-            'amount_after_rebate_code' => (int)optional($plan->pivot)->amount,
+            'amount_after_voucher_code' => (int)optional($plan->pivot)->amount,
             'bought_at' => $this->shamsiDate(optional($plan->pivot)->bought_at),
             'activation_at' => $this->shamsiDate(optional($plan->pivot)->activation_at),
             'expired_at' => $this->shamsiDate(optional($plan->pivot)->expired_at),

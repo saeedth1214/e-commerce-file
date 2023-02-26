@@ -22,7 +22,7 @@ class OrderFactory extends Factory
             'user_id' => $this->faker->randomElement($uIds),
             'total_items' => $this->faker->numberBetween(1, 3),
             'total_amount' => $amount,
-            'total_amount_after_rebate_code' => $amount,
+            'total_amount_after_voucher_code' => $amount,
             'status' => $this->faker->randomElement(OrderTypeEnum::asArray()),
             'created_at' => $this->faker->dateTimeBetween('-90 days','now'),
         ];

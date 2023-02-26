@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EnsureUserCanDownloadFile;
 use App\Http\Middleware\ViewerCounter;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\optimizeImages::class,
         'viewerCounter' => ViewerCounter::class,
+        'downloadFile' => EnsureUserCanDownloadFile::class,
 
     ];
 }

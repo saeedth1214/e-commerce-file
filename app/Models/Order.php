@@ -13,11 +13,10 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'plan_id',
         'voucher_id',
         'total_items',
         'total_amount',
-        'total_amount_after_rebate_code',
+        'total_amount_after_voucher_code',
         'status',
     ];
 
@@ -44,14 +43,9 @@ class Order extends Model
     {
         return $this->belongsToMany(File::class, 'order_has_files')->withPivot([
             'amount',
-            'rebate',
-            'amount_after_rebate'
+            'amount_after_voucher_code',
+            'bought_at'
         ]);
-    }
-
-    public function plan()
-    {
-        return $this->belongsTo(Plan::class);
     }
 
     public function transactions()

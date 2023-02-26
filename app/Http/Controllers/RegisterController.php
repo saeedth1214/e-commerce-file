@@ -17,7 +17,7 @@ class RegisterController extends Controller
 {
     use HasUsername;
     use HasToken;
-    
+
     public function handle(HandleRegisterRequest $request)
     {
         /**
@@ -25,34 +25,34 @@ class RegisterController extends Controller
          * @name('auth.user.register')
          * @middlewares('api', 'guest', 'throttle:20')
          */
-        $email=$request->input('email');
-        $cacheData=$this->getCacheData($email);
-        
-        $cacheData['try']=isset($cacheData['try']) ? $cacheData['try']+1 :1;
-        $cacheData['last_try']=now();
-        $cacheData['code']=self::generateOTPCode();
-        $cacheData['data']=$request->safe()->all();
-    
+        $email = $request->input('email');
+        $cacheData = $this->getCacheData($email);
+
+        $cacheData['try'] = isset($cacheData['try']) ? $cacheData['try'] + 1 : 1;
+        $cacheData['last_try'] = now();
+        $cacheData['code'] = self::generateOTPCode();
+        $cacheData['data'] = $request->safe()->all();
+
         Cache::put(self::getCacheKey($email), $cacheData, now()->addMinutes(20));
-        
-        $this->sendVerificationCode($email, $cacheData['code']);
-        
-        return apiResponse()->status(201)->content($cacheData['data'])->success();
+
+        // $this->sendVerificationCode($email, $cacheData['code']);
+
+        return apiResponse()->status(201)->content($cacheData['data'] + ['code' => $cacheData['code']])->success();
     }
-    
+
     public function checkUserAlreadyExists($email)
     {
         return User::findByEmail($email);
     }
 
-    
+
     public function getCacheData($email)
     {
-        $key=self::getCacheKey($email);
+        $key = self::getCacheKey($email);
         return Cache::get($key, []);
     }
 
-    
+
     private static function getCacheKey($key)
     {
         return "user.register.{$key}";
@@ -60,10 +60,10 @@ class RegisterController extends Controller
 
     private function generateOTPCode()
     {
-        return rand(0, 9). rand(10, 99). rand(10, 99);
+        return rand(0, 9) . rand(10, 99) . rand(10, 99);
     }
-    
-    
+
+
     public function sendVerificationCode($email, $code)
     {
         return SendVerificationCodeJob::dispatchSync($email, $code);
@@ -114,7 +114,7 @@ class RegisterController extends Controller
         $this->sendVerificationCode($request->input('email'), $cacheData['code']);
 
         return apiResponse()->status(201)->content([
-            'status'=>'SUCCESS'
+            'status' => 'SUCCESS'
         ])->success();
     }
     private function getToken($user, string $deviceName): string

@@ -66,7 +66,7 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
     }
     public function files()
     {
-        return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount', 'bought_at']);
+        return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount','amount_after_voucher_code','voucher_id' ,'bought_at']);
     }
     public function vouchers()
     {

@@ -252,10 +252,8 @@ class FileController extends Controller
         return apiResponse()->content(['is_reacted' => $file->is_reacted, 'reaction_summary' => $file->reactionSummary()])->success();
     }
 
-
-    public function download(EnsureUserHasFileRequest $request, File $file)
+    public function download(File $file)
     {
-
         try {
             if (is_null($file->link)) {
                 return apiResponse()->message('This file not found.')->fail();

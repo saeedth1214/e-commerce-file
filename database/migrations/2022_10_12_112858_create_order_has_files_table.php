@@ -18,8 +18,8 @@ class CreateOrderHasFilesTable extends Migration
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('file_id')->constrained('files');
             $table->decimal('amount', 12, 0, true);
-            $table->decimal('rebate', 12, 0, true)->nullable();
-            $table->decimal('amount_after_rebate', 12, 0, true);
+            $table->decimal('amount_after_voucher_code', 12, 0, true);
+            $table->timestamp('bought_at');
         });
     }
 

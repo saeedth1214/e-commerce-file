@@ -26,7 +26,6 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'voucher_id' => 'sometimes|required|integer|exists:vouchers,id,deleted_at,NULL',
-            'plan_id' => 'sometimes|required|integer|exists:plans,id,deleted_at,NULL',
             'files' => 'sometimes|required|array',
             'files.*' => [
                 'sometimes',

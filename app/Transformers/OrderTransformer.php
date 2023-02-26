@@ -25,7 +25,6 @@ class OrderTransformer extends TransformerAbstract
      * @var array
      */
     protected array $availableIncludes = [
-        'plan',
         'voucher',
         'user',
         'files',
@@ -43,7 +42,7 @@ class OrderTransformer extends TransformerAbstract
             'id' => $order->id,
             'total_items' => $order->total_items,
             'total_amount' => $order->total_amount,
-            'total_amount_after_rebate_code' => $order->total_amount_after_rebate_code,
+            'total_amount_after_voucher_code' => $order->total_amount_after_voucher_code,
             'rebate' => optional($order->voucher)->rebate,
             'percentage' => optional($order->voucher)->percentage,
             'status_dec' => OrderTypeEnum::getDescription(OrderTypeEnum::getKey($order->status)),
@@ -55,13 +54,6 @@ class OrderTransformer extends TransformerAbstract
     public function IncludeUser(Order $order)
     {
         return $this->item($order->user, new UserTransformer);
-    }
-    public function IncludePlan(Order $order)
-    {
-        if (!$order->plan) {
-            return $this->null();
-        }
-        return $this->item($order->plan, new PlanTransformer);
     }
     public function IncludeVoucher(Order $order)
     {

@@ -61,13 +61,6 @@ class Plan extends Model implements HasMedia
     {
         return $this->comments()->whereNull('parent_id');
     }
-
-    public function orders()
-    {
-
-        return $this->hasMany(Order::class);
-    }
-
     public function scopePlanComments(Builder $query, int $per_page = 15)
     {
         return $query->with('comments.user')->paginate($per_page);

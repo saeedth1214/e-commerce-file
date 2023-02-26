@@ -18,10 +18,9 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate();
             $table->foreignId('voucher_id')->nullable()->constrained('vouchers')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('plan_id')->nullable()->constrained('plans')->cascadeOnDelete()->cascadeOnUpdate();
             $table->smallInteger('total_items');
             $table->decimal('total_amount', 12);
-            $table->decimal('total_amount_after_rebate_code', 12);
+            $table->decimal('total_amount_after_voucher_code', 12);
             $table->tinyInteger('status')->default(OrderTypeEnum::PENDING)->comment('1 : pending , 2 : pay_ok , 3 : pay_failed');
             $table->index(['user_id']);
             $table->softDeletes();
