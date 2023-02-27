@@ -18,7 +18,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->index();
             $table->foreignId('parent_id')->index()->nullable();
-            $table->morphs('model');
+            $table->foreignId('file_id')->index()->constrained('files')->cascadeOnDelete()->cascadeOnUpdate();
             $table->longText('content');
             $table->tinyInteger('status')->default(CommentStatusEnum::UNSEEN);
             $table->softDeletes();

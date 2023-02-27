@@ -7,7 +7,7 @@ use App\Observers\CommentObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Qirolab\Laravel\Reactions\Contracts\ReactableInterface;
 use Qirolab\Laravel\Reactions\Traits\Reactable;
 
@@ -29,7 +29,7 @@ class Comment extends Model implements ReactableInterface
 
     protected static function boot()
     {
-     
+
         Comment::observe(CommentObserver::class);
     }
     public function user()
@@ -37,9 +37,9 @@ class Comment extends Model implements ReactableInterface
         return $this->belongsTo(User::class);
     }
 
-    public function model()
+    public function file()
     {
-        return $this->morphTo();
+        return $this->belongsTo(File::class);
     }
 
     public function replies()

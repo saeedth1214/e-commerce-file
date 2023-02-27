@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\CommentStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,23 +40,23 @@ class Plan extends Model implements HasMedia
         $this->addMediaCollection('plan-image')->singleFile();
     }
 
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'model');
-    }
+    // public function comments()
+    // {
+    //     return $this->morphMany(Comment::class, 'model');
+    // }
 
-    public function acceptedMainComments()
-    {
-        return $this->comments()->whereNull('parent_id')->where('status', CommentStatusEnum::ACCEPT);
-    }
-    public function mainComments()
-    {
-        return $this->comments()->whereNull('parent_id');
-    }
-    public function scopePlanComments(Builder $query, int $per_page = 15)
-    {
-        return $query->with('comments.user')->paginate($per_page);
-    }
+    // public function acceptedMainComments()
+    // {
+    //     return $this->comments()->whereNull('parent_id')->where('status', CommentStatusEnum::ACCEPT);
+    // }
+    // public function mainComments()
+    // {
+    //     return $this->comments()->whereNull('parent_id');
+    // }
+    // public function scopePlanComments(Builder $query, int $per_page = 15)
+    // {
+    //     return $query->with('comments.user')->paginate($per_page);
+    // }
     public function scopeUserId(Builder $query, int $user_id)
     {
         return $query->whereHas('users', fn ($query) => $query->where('user_id', $user_id));

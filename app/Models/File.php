@@ -36,7 +36,7 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public static function boot(): void
     {
-       File::observe(FileObserver::class);
+        File::observe(FileObserver::class);
     }
 
     public function plans()
@@ -79,7 +79,7 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'model');
+        return $this->hasMany(Comment::class,'file_id');
     }
     public function acceptedMainComments()
     {

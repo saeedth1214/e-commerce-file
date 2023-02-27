@@ -21,8 +21,8 @@ class PlanTransformer extends TransformerAbstract
     use AmountAfterModelRebate;
     protected array $availableIncludes = [
         'users',
-        'acceptedMainComments',
-        'mainComments'
+        // 'acceptedMainComments',
+        // 'mainComments'
     ];
 
     public function transform(Plan $plan)
@@ -55,14 +55,14 @@ class PlanTransformer extends TransformerAbstract
         return $this->collection($plan->users, new UserTransformer());
     }
 
-    public function IncludeAcceptedMainComments(Plan $plan)
-    {
-        return $this->collection($plan->acceptedMainComments, new CommentTransformer());
-    }
-    public function IncludeMainComments(Plan $plan)
-    {
-        return $this->collection($plan->mainComments, new CommentTransformer());
-    }
+    // public function IncludeAcceptedMainComments(Plan $plan)
+    // {
+    //     return $this->collection($plan->acceptedMainComments, new CommentTransformer());
+    // }
+    // public function IncludeMainComments(Plan $plan)
+    // {
+    //     return $this->collection($plan->mainComments, new CommentTransformer());
+    // }
 
     private function hasBeenExpired(?string $datetime)
     {
