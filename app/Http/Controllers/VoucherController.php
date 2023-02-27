@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Traits\FilterQueryBuilder;
 use App\Models\Voucher;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Filters\FilterBySpecialValue;
 use App\Filters\FilterByDateTime;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UpdateVoucherRequest;
@@ -40,7 +39,6 @@ class VoucherController extends Controller
                 AllowedFilter::exact('type'),
                 AllowedFilter::exact('percentage'),
                 AllowedFilter::exact('status'),
-                AllowedFilter::custom('rebate', new FilterBySpecialValue),
                 AllowedFilter::custom('expired_at', new FilterByDateTime),
                 AllowedFilter::custom('created_at', new FilterByDateTime),
             ])

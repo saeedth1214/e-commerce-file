@@ -26,7 +26,7 @@ use App\Http\Requests\AssignVoucherToUserRequest;
 use App\Traits\AmountAfterModelRebate;
 use App\Traits\ConvertDateTime;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {

@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\AccessTypeEnum;
 use App\Enums\OrderTypeEnum;
-use App\Enums\PlanStatusEnum;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\File;
 use App\Models\Order;
-use App\Models\Plan;
 use App\Models\Voucher;
 use App\Traits\AmountAfterModelRebate;
 use App\Traits\FilterQueryBuilder;
@@ -184,7 +182,11 @@ class OrderController extends Controller
             ]
         ];
         $attachments = $files->mapToGroups($attachToUser)->map(fn ($group) => $group->first());
-        auth()->user()->files()->syncWithoutDetaching($attachments);
+        /**
+         * @var User $user
+         */
+        $user = auth()->user();
+        $user->files()->syncWithoutDetaching($attachments);
         $attachToOrder = fn ($pivot) => [
             $pivot->id => [
                 'amount' => $this->calculateRebate($pivot),

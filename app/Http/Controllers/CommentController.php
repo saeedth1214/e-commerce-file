@@ -7,7 +7,6 @@ use App\Models\Comment;
 use App\Transformers\CommentTransformer;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
-use App\Filters\FilterBySpecialValue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -34,7 +33,6 @@ class CommentController extends Controller
                 AllowedFilter::exact('parent_id'),
                 AllowedFilter::exact('status'),
                 AllowedFilter::custom('created_at', new FilterByDateTime()),
-                AllowedFilter::custom('likes_count', new FilterBySpecialValue()),
                 AllowedFilter::scope('orderby'),
             ])
             ->paginate($per_page);

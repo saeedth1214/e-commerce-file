@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\CommentStatusEnum;
-use App\Observers\CommentObserver;
 use App\Traits\ObservComment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

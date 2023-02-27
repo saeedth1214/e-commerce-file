@@ -9,7 +9,6 @@ use App\Http\Requests\StorePlanRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use Illuminate\Http\JsonResponse;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Filters\FilterBySpecialValue;
 use App\Filters\FilterByDateTime;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedInclude;
@@ -52,9 +51,6 @@ class PlanController extends Controller
             ->allowedFilters([
                 'title',
                 AllowedFilter::exact('percentage'),
-                AllowedFilter::custom('amount', new FilterBySpecialValue),
-                AllowedFilter::custom('rebate', new FilterBySpecialValue),
-                AllowedFilter::custom('daily_download_limit_count', new FilterBySpecialValue),
                 AllowedFilter::custom('created_at', new FilterByDateTime),
                 AllowedFilter::custom('unique', new FilterUniqueValue),
                 AllowedFilter::scope('user_id', 'userId')

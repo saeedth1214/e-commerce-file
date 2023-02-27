@@ -40,13 +40,13 @@ class RegisterController extends Controller
         return apiResponse()->status(201)->content($cacheData['data'] + ['code' => $cacheData['code']])->success();
     }
 
-    public function checkUserAlreadyExists($email)
+    private function checkUserAlreadyExists($email)
     {
         return User::findByEmail($email);
     }
 
 
-    public function getCacheData($email)
+    private function getCacheData($email)
     {
         $key = self::getCacheKey($email);
         return Cache::get($key, []);
@@ -64,7 +64,7 @@ class RegisterController extends Controller
     }
 
 
-    public function sendVerificationCode($email, $code)
+    private function sendVerificationCode($email, $code)
     {
         return SendVerificationCodeJob::dispatchSync($email, $code);
     }

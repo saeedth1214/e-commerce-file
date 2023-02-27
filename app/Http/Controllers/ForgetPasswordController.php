@@ -57,23 +57,23 @@ class ForgetPasswordController extends Controller
     
     
     
-    public function sendForgetPasswordEmail($email,$token)
+    private function sendForgetPasswordEmail($email,$token)
     {
         return SendForgetPasswordTokenJob::dispatch($email, $token);
     }
     
     
-    public function generateToken()
+    private function generateToken()
     {
         return Str::random(24);
     }
     
-    public function getCacheKey($email)
+    private function getCacheKey($email)
     {
-        return "user.forget-password.${email}";
+        return "user.forget-password.{$email}";
     }
     
-    public function getCacheData($email)
+    private function getCacheData($email)
     {
         $key=$this->getCacheKey($email);
         return Cache::get($key, []);

@@ -4,15 +4,11 @@ namespace Tests\Feature;
 
 
 use App\Enums\UserRoleEnum;
-use App\Events\DailyFileDownloadEvent;
-use App\Models\Category;
 use App\Models\File;
 use App\Models\User;
 use App\Traits\DownloadKey;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Testing\Fakes\EventFake;
-use Psy\Readline\Hoa\EventListener;
 use Tests\TestCase;
 
 class DownloadFileTest extends TestCase
@@ -53,7 +49,7 @@ class DownloadFileTest extends TestCase
 
         $files = $user->files()->get();
 
-    
+
         $this->assertEquals(1, $files->count());
 
         $res = $this->postJson("/api/frontend/files/{$files[0]}/download");

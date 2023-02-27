@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Traits\DownloadKey;
-use Exception;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 class DailyFileDownloadListener

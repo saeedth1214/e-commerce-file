@@ -36,7 +36,7 @@ class LoginController extends Controller
         return apiResponse()->content($tokenData)->success();
     }
 
-    public function getUser(HandleLoginRequest $request)
+    private function getUser(HandleLoginRequest $request)
     {
         $type = $this->getUsernameType($request->input('username'));
 
@@ -49,12 +49,12 @@ class LoginController extends Controller
     }
 
 
-    public function getToken($user, $deviceName)
+    private function getToken($user, $deviceName)
     {
         return $user->createToken($deviceName)->plainTextToken;
     }
 
-    public function current_user()
+    private function current_user()
     {
         /**
          * @get('/api/auth/user')

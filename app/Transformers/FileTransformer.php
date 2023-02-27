@@ -16,7 +16,6 @@ use League\Fractal\TransformerAbstract;
 use App\Traits\ConvertDateTime;
 use App\Traits\AmountAfterModelRebate;
 use Illuminate\Support\Facades\Redis;
-use phpDocumentor\Reflection\Types\This;
 
 class FileTransformer extends TransformerAbstract
 {
