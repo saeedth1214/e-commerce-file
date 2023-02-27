@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CommentStatusEnum;
 use App\Observers\CommentObserver;
+use App\Traits\ObservComment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Qirolab\Laravel\Reactions\Traits\Reactable;
 
 class Comment extends Model implements ReactableInterface
 {
-    use HasFactory, Reactable, SoftDeletes;
+    use HasFactory, Reactable, SoftDeletes, ObservComment;
 
     protected $fillable = [
         'user_id',
@@ -27,11 +28,6 @@ class Comment extends Model implements ReactableInterface
         'status' => 0,
     ];
 
-    protected static function boot()
-    {
-
-        Comment::observe(CommentObserver::class);
-    }
     public function user()
     {
         return $this->belongsTo(User::class);

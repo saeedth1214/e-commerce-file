@@ -20,7 +20,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use App\Http\Requests\AssignAttributeRequest;
-use App\Http\Requests\EnsureUserHasFileRequest;
 use App\Http\Requests\GenerateTemporaryUrlRequest;
 use App\Http\Requests\StoreFileCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
@@ -336,6 +335,7 @@ class FileController extends Controller
 
     public function mostVisited()
     {
+
         $mostVisitedFiles = File::query()->mostVisited();
 
         return apiResponse()->content(['most-visited' => $mostVisitedFiles])->success();

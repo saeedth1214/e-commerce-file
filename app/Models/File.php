@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Enums\AttributeTypeEnum;
 use App\Enums\CommentStatusEnum;
-use App\Enums\FileFormatEnum;
 use App\Observers\FileObserver;
+use App\Traits\ObservFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class File extends Model implements HasMedia, ReactableInterface
 {
-    use HasFactory, InteractsWithMedia, Reactable, SoftDeletes;
+    use HasFactory, InteractsWithMedia, Reactable, SoftDeletes, ObservFile;
 
     protected $fillable = [
         'id',
@@ -32,12 +32,6 @@ class File extends Model implements HasMedia, ReactableInterface
         'category_id',
         'link'
     ];
-
-
-    public static function boot(): void
-    {
-        File::observe(FileObserver::class);
-    }
 
     public function plans()
     {
@@ -79,7 +73,7 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public function comments()
     {
-        return $this->hasMany(Comment::class,'file_id');
+        return $this->hasMany(Comment::class, 'file_id');
     }
     public function acceptedMainComments()
     {
@@ -117,8 +111,8 @@ class File extends Model implements HasMedia, ReactableInterface
 
     public function scopeMostVisited()
     {
-        $files = Redis::zRange('view-counter', 0, 6, true);
 
+        $files = Redis::zRange('view-counter', 0, 6, true);
         $grouped = collect($files)->maptoGroups(function ($view, $key) {
 
             return [

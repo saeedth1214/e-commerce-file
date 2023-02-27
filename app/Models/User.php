@@ -10,17 +10,16 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Notifications\SendVerificationCodeNotification;
-use App\Observers\UserObserver;
+use App\Traits\ObservUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cache;
 use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
 use Qirolab\Laravel\Reactions\Traits\Reacts;
 
 
 class User extends Authenticatable implements HasMedia, ReactsInterface
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, Reacts, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, Reacts, SoftDeletes, ObservUser;
 
     /**
      * The attributes that are mass assignable.
@@ -58,10 +57,6 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
         'mobile_verified_at' => 'datetime'
     ];
 
-    protected static function boot()
-    {
-        User::observe(UserObserver::class);
-    }
     public function files()
     {
         return $this->belongsToMany(File::class, 'user_has_files')->withPivot(['amount', 'amount_after_voucher_code', 'voucher_id', 'bought_at']);

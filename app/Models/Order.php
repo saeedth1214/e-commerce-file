@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use App\Observers\OrderObserver;
+use App\Traits\ObservOrder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cache;
 
 class Order extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ObservOrder;
 
     protected $fillable = [
         'user_id',
@@ -20,11 +19,6 @@ class Order extends Model
         'total_amount_after_voucher_code',
         'status',
     ];
-
-    protected static function boot()
-    {
-        Order::observe(OrderObserver::class);
-    }
 
     public function user()
     {
