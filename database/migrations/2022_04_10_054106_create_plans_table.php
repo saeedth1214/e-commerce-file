@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PlanTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,8 @@ class CreatePlansTable extends Migration
             $table->decimal('rebate', 12, 0, true)->nullable();
             $table->boolean('percentage')->default(true)->nullable();
             $table->unsignedSmallInteger('daily_download_limit_count');
-            $table->unsignedSmallInteger('activation_days');
+            $table->unsignedSmallInteger('daily_free_download_limit_count');
+            $table->tinyInteger('type')->default(PlanTypeEnum::MONTHLY);
             $table->softDeletes();
             $table->timestamps();
         });
