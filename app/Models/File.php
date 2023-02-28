@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\AttributeTypeEnum;
 use App\Enums\CommentStatusEnum;
-
 use App\Traits\ObservFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

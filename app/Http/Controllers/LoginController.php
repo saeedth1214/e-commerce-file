@@ -54,7 +54,7 @@ class LoginController extends Controller
         return $user->createToken($deviceName)->plainTextToken;
     }
 
-    private function current_user()
+    public function current_user()
     {
         /**
          * @get('/api/auth/user')
