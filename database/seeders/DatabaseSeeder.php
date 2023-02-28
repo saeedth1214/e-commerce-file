@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             // CategoryTableSeeder::class,
             // VoucherTableSeeder::class,
             // TagSeeder::class,
-            AttributeTableSeeder::class
+            // AttributeTableSeeder::class
+            PlanTableSeeder::class
         ]);
     }
 }
