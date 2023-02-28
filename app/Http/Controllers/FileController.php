@@ -261,7 +261,11 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            if (!Storage::exists($file_without_ext . '.' . FileFormatEnum::asString(FileFormatEnum::EPS)) && !Storage::exists($file_without_ext . '.' . FileFormatEnum::asString(FileFormatEnum::PSD))) {
+            $extension = $file->format();
+            $file_full_path = $file_without_ext . '.' . $extension;
+
+
+            if (!Storage::exists($file_full_path)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;

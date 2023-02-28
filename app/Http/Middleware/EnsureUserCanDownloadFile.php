@@ -19,11 +19,9 @@ class EnsureUserCanDownloadFile
      */
     public function handle(Request $request, Closure $next)
     {
-        $amount = $this->calculateRebate($request->file);
 
-        if ((int)$amount === 0) {
-            return $next($request);
-        }
+        return $next($request);
+
         $count = User::query()->userHasThisFile(auth()->id(), $request->file->id);
         // the user have bought this file .
         if ($count) {

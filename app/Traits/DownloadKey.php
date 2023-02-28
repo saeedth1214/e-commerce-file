@@ -13,4 +13,8 @@ trait DownloadKey
     {
         return 'daily_file_download';
     }
+    protected function freeFileDownloadKey()
+    {
+        return 'daily_free_file_download';
+    }
 }

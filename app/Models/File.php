@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AttributeTypeEnum;
 use App\Enums\CommentStatusEnum;
+use App\Enums\FileFormatEnum;
 use App\Traits\ObservFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -138,5 +139,11 @@ class File extends Model implements HasMedia, ReactableInterface
             ->select('files.*', 'attributes.type', 'attributes_values.value')
             ->where('type', AttributeTypeEnum::FORMAT)
             ->where('value', $format);
+    }
+
+    public function format()
+    {
+        $fileFormat = $this->attributes()->where('type', AttributeTypeEnum::FORMAT)->first();
+        return $fileFormat ?  FileFormatEnum::asString($fileFormat->pivot->value) : FileFormatEnum::asString(FileFormatEnum::PSD);
     }
 }
