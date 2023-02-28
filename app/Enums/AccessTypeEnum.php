@@ -10,8 +10,8 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 /**
- * @method static static AdminHaveAdded()
- * @method static static Payment()
+ * @method static  AdminHaveAdded()
+ * @method static  Payment()
  */
 final class AccessTypeEnum extends Enum
 {

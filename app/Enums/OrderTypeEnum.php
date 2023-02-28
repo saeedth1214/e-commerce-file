@@ -7,9 +7,9 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static PENDING()
- * @method static static PAY_OK()
- * @method static static PAY_FAILED()
+ * @method static PENDING()
+ * @method static PAY_OK()
+ * @method static PAY_FAILED()
  */
 final class OrderTypeEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {

@@ -14,9 +14,9 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static Unseen()
- * @method static static Accept()
- * @method static static Reject()
+ * @method static  Unseen()
+ * @method static  Accept()
+ * @method static  Reject()
  */
 final class CommentStatusEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {

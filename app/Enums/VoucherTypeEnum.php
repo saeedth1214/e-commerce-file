@@ -14,9 +14,9 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use App\Contracts\LocalizeFaDescription;
 
 /**
- * @method static static IS_GENERAL_FOR_PRODUCT()
- * @method static static IS_GENERAL_FOR_USER()
- * @method static static SOME_OF_USERS_HAVE_THIS()
+ * @method static IS_GENERAL_FOR_PRODUCT()
+ * @method static IS_GENERAL_FOR_USER()
+ * @method static SOME_OF_USERS_HAVE_THIS()
  */
 final class VoucherTypeEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {

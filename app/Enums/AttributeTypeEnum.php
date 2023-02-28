@@ -5,11 +5,11 @@ namespace App\Enums;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static FORMAT()
- * @method static static SIZE()
- * @method static static ASPECT()
- * @method static static RESOLUTION()
- * @method static static SCREEN()
+ * @method static  FORMAT()
+ * @method static  SIZE()
+ * @method static  ASPECT()
+ * @method static  RESOLUTION()
+ * @method static  SCREEN()
  */
 final class AttributeTypeEnum extends Enum
 {

@@ -12,8 +12,8 @@ use BenSampo\Enum\Enum;
 
 
 /**
- * @method static static IS_GENERAL()
- * @method static static OTHER()
+ * @method static IS_GENERAL()
+ * @method static OTHER()
  */
 final class FilterOperatorEnum extends Enum
 {

@@ -7,9 +7,9 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static ACTIVE()
- * @method static static INACTIVE()
- * @method static static EXPIRED()
+ * @method static ACTIVE()
+ * @method static INACTIVE()
+ * @method static EXPIRED()
  */
 final class PlanStatusEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {

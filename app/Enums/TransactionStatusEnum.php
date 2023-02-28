@@ -11,10 +11,10 @@ namespace App\Enums;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static Created()
- * @method static static Paying()
- * @method static static Payed()
- * @method static static Canceled()
+ * @method static Created()
+ * @method static Paying()
+ * @method static Payed()
+ * @method static Canceled()
  */
 final class TransactionStatusEnum extends Enum
 {

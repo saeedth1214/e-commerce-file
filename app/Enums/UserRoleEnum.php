@@ -14,8 +14,8 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use App\Contracts\LocalizeFaDescription;
 
 /**
- * @method static static Admin()
- * @method static static Normal()
+ * @method static Admin()
+ * @method static Normal()
  */
 final class UserRoleEnum extends Enum implements LocalizedEnum, LocalizeFaDescription
 {
@@ -26,7 +26,6 @@ final class UserRoleEnum extends Enum implements LocalizedEnum, LocalizeFaDescri
     {
         return [
             static::class => [
-
                 'ADMIN' => 'ادمین',
                 'NORMAL' => 'کاربر عادی'
             ]
