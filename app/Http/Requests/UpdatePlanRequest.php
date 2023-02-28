@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PlanTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,7 @@ class UpdatePlanRequest extends FormRequest
     {
         return [
             'title' => [
-                'required','string', 'min:2','max:256',
+                'required', 'string', 'min:2', 'max:256',
                 Rule::unique('plans', 'title')->ignore($this->plan)
             ],
             'description' => 'nullable|string',
@@ -34,7 +35,8 @@ class UpdatePlanRequest extends FormRequest
             'rebate' => $this->input('percentage') ? 'nullable|integer|min:0|max:100' : 'nullable|integer|min:0|max:4294967295',
             'amount' => 'required|integer|min:0|max:4294967295',
             'daily_download_limit_count' => 'required|integer|min:0|max:65535',
-            'activation_days' => 'required|integer|min:1|max:65535',
+            'daily_free_download_limit_count' => 'required|integer|min:0|max:65535',
+            'type' => ['required', 'integer', Rule::in(PlanTypeEnum::asArray())]
         ];
     }
 }

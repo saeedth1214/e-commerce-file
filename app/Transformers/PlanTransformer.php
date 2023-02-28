@@ -9,6 +9,7 @@
 
 namespace App\Transformers;
 
+use App\Enums\PlanTypeEnum;
 use App\Models\Plan;
 use League\Fractal\TransformerAbstract;
 use App\Traits\ConvertDateTime;
@@ -21,8 +22,6 @@ class PlanTransformer extends TransformerAbstract
     use AmountAfterModelRebate;
     protected array $availableIncludes = [
         'users',
-        // 'acceptedMainComments',
-        // 'mainComments'
     ];
 
     public function transform(Plan $plan)
@@ -35,34 +34,23 @@ class PlanTransformer extends TransformerAbstract
             'rebate' => (int) $plan->rebate,
             'percentage' => $plan->percentage,
             'daily_download_limit_count' => $plan->daily_download_limit_count,
-            'activation_days' => $plan->activation_days,
+            'daily_free_download_limit_count' => $plan->daily_free_download_limit_count,
             'amount_after_rebate' => (int) $this->calculateRebate($plan),
-            'amount_after_voucher_code' => (int)optional($plan->pivot)->amount,
             'bought_at' => $this->shamsiDate(optional($plan->pivot)->bought_at),
             'activation_at' => $this->shamsiDate(optional($plan->pivot)->activation_at),
             'expired_at' => $this->shamsiDate(optional($plan->pivot)->expired_at),
             'has_been_expired' =>  $this->hasBeenExpired(optional($plan->pivot)->expired_at),
-            'media_url' => $this->getMediaUrl($plan),
-            'usersCount' => $plan->users_count ?? $plan->users->count()
+            'type' => $plan->type,
+            'type_desc' => PlanTypeEnum::getDescription(PlanTypeEnum::getKey($plan->type)),
+            'created_at' => $this->shamsiDate($plan->created_at),
         ];
     }
-    private function getMediaUrl(Plan $plan)
-    {
-        return $plan->getFirstMediaUrl('plan-image');
-    }
+
     public function IncludeUsers(Plan $plan)
     {
         return $this->collection($plan->users, new UserTransformer());
     }
 
-    // public function IncludeAcceptedMainComments(Plan $plan)
-    // {
-    //     return $this->collection($plan->acceptedMainComments, new CommentTransformer());
-    // }
-    // public function IncludeMainComments(Plan $plan)
-    // {
-    //     return $this->collection($plan->mainComments, new CommentTransformer());
-    // }
 
     private function hasBeenExpired(?string $datetime)
     {

@@ -12,9 +12,6 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedInclude;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
-use App\Http\Requests\ChangePlanMediaRequest;
 use App\Filters\FilterUniqueValue;
 use App\Http\Requests\StorePlanCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
@@ -130,29 +127,6 @@ class PlanController extends Controller
          */
         $planData = $request->safe()->all();
         $plan->update($planData);
-        return apiResponse()->empty();
-    }
-    public function uploadFileMedia(Plan $plan, ChangePlanMediaRequest $request)
-    {
-        /**
-         * @post('/api/panel/plans/{plan}/upload-media')
-         * @name('panel..plans.media')
-         * @middlewares('api', 'auth:sanctum')
-         */
-        try {
-            $plan->addMediaFromRequest('file')
-                ->toMediaCollection('plan-image');
-        } catch (FileDoesNotExist $exception) {
-            return apiResponse()
-                ->status(400)
-                ->message('File is missing.')
-                ->fail();
-        } catch (FileIsTooBig $exception) {
-            return apiResponse()
-                ->status(400)
-                ->message('File is too big.')
-                ->fail();
-        }
         return apiResponse()->empty();
     }
     /**
