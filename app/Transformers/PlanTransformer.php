@@ -42,7 +42,6 @@ class PlanTransformer extends TransformerAbstract
             'has_been_expired' =>  $this->hasBeenExpired(optional($plan->pivot)->expired_at),
             'type' => $plan->type,
             'type_desc' => PlanTypeEnum::getDescription(PlanTypeEnum::getKey($plan->type)),
-            'created_at' => $this->shamsiDate($plan->created_at),
         ];
     }
 
