@@ -3,29 +3,34 @@
 namespace App\Observers;
 
 use App\Models\File;
+use Illuminate\Support\Facades\Redis;
 
 class FileObserver
 {
+    public function updated(File $file)
+    {
 
-    /**
-     * Handle the File "deleted" event.
-     *
-     * @param  \App\Models\File  $file
-     * @return void
-     */
+        $categoryName = $file->category->name;
+        $key = $file->id;
+        Redis::hSetNx($key, 'title', $file->title);
+        Redis::hSetNx($key, 'category_name', $categoryName);
+    }
+
     public function deleted(File $file)
     {
         $file->comments()->delete();
+        $this->removeRedisKey($file->id);
     }
-    /**
-     * 
-     * Handle the File "force deleted" event.
-     *
-     * @param  \App\Models\File  $file
-     * @return void
-     */
+
     public function forceDeleted(File $file)
     {
         $file->comments()->delete();
+        $this->removeRedisKey($file->id);
+    }
+
+    private function removeRedisKey($id)
+    {
+        Redis::hDel($id);
+        Redis::zRem('view-counter', $id);
     }
 }

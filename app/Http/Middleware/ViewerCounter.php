@@ -19,14 +19,15 @@ class ViewerCounter
     {
         $file = $request->file;
         $categoryName = $file->category->name;
-        $key= $file->id;
-        Redis::hSetNx($key,'title',$file->title);
-        Redis::hSetNx($key,'category_name',$categoryName);
-        Redis::hINCRBY($key,'views',1);
-    
-        $views = Redis::hGet($key,'views');
+        $key = $file->id;
+        Redis::hSetNx($key, 'title', $file->title);
+        Redis::hSetNx($key, 'category_name', $categoryName);
+        Redis::hSetNx($key, 'media_url', $file->getFirstMediaUrl('file-image') ?? '');
+        Redis::hINCRBY($key, 'views', 1);
 
-        Redis::zAdd('view-counter',$views,$key);
+        $views = Redis::hGet($key, 'views');
+
+        Redis::zAdd('view-counter', $views, $key);
         return $next($request);
     }
 }

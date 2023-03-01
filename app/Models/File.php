@@ -114,11 +114,11 @@ class File extends Model implements HasMedia, ReactableInterface
 
         $files = Redis::zRange('view-counter', 0, 6, true);
         $grouped = collect($files)->maptoGroups(function ($view, $key) {
-
             return [
                 $key => [
                     'title' => Redis::hGet($key, 'title'),
                     'category_name' => Redis::hGet($key, 'category_name'),
+                    'media_url' => Redis::hGet($key, 'media_url'),
                     'views' => $view
                 ],
             ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\FileFormatEnum;
 use App\Events\DailyFileDownloadEvent;
+use App\Events\UpdateFileMediaUrlEvent;
 use App\Http\Requests\StoreFileRequest;
 use App\Traits\FilterQueryBuilder;
 use App\Models\File;
@@ -180,6 +181,8 @@ class FileController extends Controller
          */
         try {
             $file->addMediaFromRequest('file')->toMediaCollection('file-image');
+            // update media url in redis
+            event(new UpdateFileMediaUrlEvent($file));
         } catch (FileDoesNotExist $exception) {
             return apiResponse()
                 ->status(400)
