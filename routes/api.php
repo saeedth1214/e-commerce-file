@@ -125,12 +125,3 @@ Route::prefix('frontend')
             Route::get('users/{userId}/files/{fileId}', [UserController::class, 'userHasFile'])->name('user.has.file');
         });
     });
-
-
-Route::get('truncate', function () {
-
-    // dd(auth()->user()->plans());
-    // auth()->user()->orders()->delete();
-    // auth()->user()->plans()->delete();
-    // auth()->user()->files()->delete();
-});

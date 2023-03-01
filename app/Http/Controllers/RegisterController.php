@@ -36,7 +36,6 @@ class RegisterController extends Controller
         Cache::put(self::getCacheKey($email), $cacheData, now()->addMinutes(20));
 
         try {
-
             $this->sendVerificationCode($email, $cacheData['code']);
         } catch (\Throwable $th) {
             return apiResponse()->status(503)->content(['error' => 'مشکلی در ارسال ایمیل تایید به وجود آمد'])->success();
@@ -116,10 +115,14 @@ class RegisterController extends Controller
         $cacheData['code'] = self::generateOTPCode();
 
         Cache::put(self::getCacheKey($request->input('email')), $cacheData, now()->addMinutes(20));
-        $this->sendVerificationCode($request->input('email'), $cacheData['code']);
+        try {
+            $this->sendVerificationCode($request->input('email'), $cacheData['code']);
+        } catch (\Throwable $th) {
+            return apiResponse()->status(503)->content(['error' => 'مشکلی در ارسال ایمیل تایید به وجود آمد'])->success();
+        }
 
         return apiResponse()->status(201)->content([
-            'status' => 'SUCCESS'
+            'status' => 'SUCCESS',
         ])->success();
     }
     private function getToken($user, string $deviceName): string
