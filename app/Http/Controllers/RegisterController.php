@@ -35,7 +35,12 @@ class RegisterController extends Controller
 
         Cache::put(self::getCacheKey($email), $cacheData, now()->addMinutes(20));
 
-        $this->sendVerificationCode($email, $cacheData['code']);
+        try {
+
+            $this->sendVerificationCode($email, $cacheData['code']);
+        } catch (\Throwable $th) {
+            return apiResponse()->status(503)->content(['error' => 'مشکلی در ارسال ایمیل تایید به وجود آمد'])->success();
+        }
 
         return apiResponse()->status(201)->content($cacheData['data'])->success();
     }
