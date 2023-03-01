@@ -35,9 +35,9 @@ class RegisterController extends Controller
 
         Cache::put(self::getCacheKey($email), $cacheData, now()->addMinutes(20));
 
-        // $this->sendVerificationCode($email, $cacheData['code']);
+        $this->sendVerificationCode($email, $cacheData['code']);
 
-        return apiResponse()->status(201)->content($cacheData['data'] + ['code' => $cacheData['code']])->success();
+        return apiResponse()->status(201)->content($cacheData['data'])->success();
     }
 
     private function checkUserAlreadyExists($email)
