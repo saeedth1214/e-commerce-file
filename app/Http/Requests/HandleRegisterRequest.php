@@ -31,7 +31,7 @@ class HandleRegisterRequest extends FormRequest
                 'required',
                 'email',
                 'string',
-                'unique:users,email',
+                'unique:users,email,NULL,id,deleted_at,NULL',
                 function ($attribute, $val, $fail) {
                     $cacheData = $this->getCacheData($this->input('email'));
 
@@ -44,7 +44,7 @@ class HandleRegisterRequest extends FormRequest
                     }
                 },
             ],
-            'mobile'=>'sometimes|required|mobile|unique:users,mobile',
+            'mobile' => 'sometimes|required|mobile|unique:users,mobile',
             'password' => 'required|string|min:6|max:64|confirmed',
             'password_confirmation' => 'required|string|min:6|max:64',
         ];

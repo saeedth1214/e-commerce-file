@@ -26,12 +26,12 @@ class StoreVoucherRequest extends FormRequest
     public function rules()
     {
         return [
-            'code'=>'required|string|min:3|max:64|unique:vouchers,code',
-            'status'=>'required|boolean',
+            'code' => 'required|string|min:3|max:64|unique:vouchers,code,NULL,id,deleted_at,NULL',
+            'status' => 'required|boolean',
             'percentage' => 'required|boolean',
-            'rebate'=>$this->input('percentage') ? 'required|integer|min:0|max:100' : 'required|integer|min:0|max:4294967295',
-            'expired_at'=> 'required|date_format:Y-m-d H:i:s',
-            'type'=>[
+            'rebate' => $this->input('percentage') ? 'required|integer|min:0|max:100' : 'required|integer|min:0|max:4294967295',
+            'expired_at' => 'required|date_format:Y-m-d H:i:s',
+            'type' => [
                 'required',
                 'integer',
                 Rule::in(VoucherTypeEnum::asArray())

@@ -24,7 +24,7 @@ class StoreFileRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:2|max:256|unique:files,title,deleted_at,NULL',
+            'title' => 'required|string|min:2|max:256|unique:files,title,NULL,id,deleted_at,NULL',
             'description' => 'nullable|string',
             'percentage' => 'nullable|boolean',
             'sale_as_single' => 'required|boolean',

@@ -26,15 +26,15 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name'=>'required|string|min:3|max:64',
+            'first_name' => 'required|string|min:3|max:64',
             'last_name' => 'required|string|min:3|max:64',
-            'role_id'=>[
+            'role_id' => [
                 'required',
                 'integer',
                 Rule::in(UserRoleEnum::asArray())
             ],
-            'mobile' => 'required|string|mobile|unique:users,mobile',
-            'email' => 'required|string|email|unique:users,email',
+            'mobile' => 'required|string|mobile|unique:users,mobile,NULL,id,deleted_at,NULL',
+            'email' => 'required|string|email|unique:users,email,NULL,id,deleted_at,NULL',
             'password' => 'required|string|min:6|max:64|confirmed',
             'password_confirmation' => 'required|string|min:6|max:64',
         ];
