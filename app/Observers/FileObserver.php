@@ -9,11 +9,10 @@ class FileObserver
 {
     public function updated(File $file)
     {
-
         $categoryName = $file->category->name;
         $key = $file->id;
-        Redis::hSetNx($key, 'title', $file->title);
-        Redis::hSetNx($key, 'category_name', $categoryName);
+        Redis::hSet($key, 'title', $file->title);
+        Redis::hSet($key, 'category_name', $categoryName);
     }
 
     public function deleted(File $file)

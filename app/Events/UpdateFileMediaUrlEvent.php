@@ -16,7 +16,7 @@ class UpdateFileMediaUrlEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     private $file;
-    
+
     public function __construct(File $file)
     {
         $this->file = $file;
@@ -37,7 +37,7 @@ class UpdateFileMediaUrlEvent
     private function updateMediaUrlInRedis()
     {
         if (Redis::hEXISTS($this->file->id, 'media_url')) {
-            Redis::hSetNx($this->file->id, 'media_url', $this->file->getFirstMediaUrl('file-image') ?? '');
+            Redis::hset($this->file->id, 'media_url', $this->file->getFirstMediaUrl('file-image') ?? '');
         }
     }
 }
