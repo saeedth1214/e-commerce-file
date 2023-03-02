@@ -71,7 +71,7 @@ class FileTransformer extends TransformerAbstract
 
     public function getViews($id)
     {
-        return Redis::hGet($id,'views');
+        return Redis::hGet($id, 'views');
     }
 
     public function getFileTitle($file)
@@ -109,11 +109,16 @@ class FileTransformer extends TransformerAbstract
     {
 
         $attributes = $file->attributes;
-        return $this->collection($attributes, fn ($attribute) => [
-            'id' => $attribute->id,
-            'name' => $attribute->name,
-            'type' => AttributeTypeEnum::getKey($attribute->type),
-            'value' => $attribute->type === AttributeTypeEnum::FORMAT ?  FileFormatEnum::asString($attribute->pivot->value) : $attribute->pivot->value
-        ]);
+        return $this->collection(
+            $attributes,
+            fn ($attribute) => [
+                'id' => $attribute->id,
+                'name' => $attribute->name,
+                'type' => AttributeTypeEnum::getKey($attribute->type),
+                'value' => $attribute->pivot->value,
+                'value_desc' => $attribute->type === AttributeTypeEnum::FORMAT ? FileFormatEnum::asString($attribute->pivot->value) : '',
+            ]
+
+        );
     }
 }
