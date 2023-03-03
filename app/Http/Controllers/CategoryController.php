@@ -12,6 +12,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
 use App\Http\Requests\ChangeCategoryMediaRequest;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -168,7 +169,9 @@ class CategoryController extends Controller
 
     public function menubar()
     {
-        $categories = Category::query()->whereNull('parent_id')->get();
+        $categories =Cache::remember('category-menubar',86400,function(){
+            return Category::query()->whereNull('parent_id')->get();
+        });
 
 
         return fractal()
