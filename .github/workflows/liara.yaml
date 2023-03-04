@@ -16,4 +16,4 @@ jobs:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
         run: |
           npm i -g @liara/cli@3
-          liara deploy --app="api-ecommerce-file" --api-token="$LIARA_TOKEN" --detach 
+          liara deploy --app="api-file-store" --api-token="$LIARA_TOKEN" --detach 
