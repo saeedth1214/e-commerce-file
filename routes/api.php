@@ -58,7 +58,6 @@ Route::prefix('panel')
         Route::post('users/{user}/change-avatar', [UserController::class, 'changeAvatar'])->whereNumber('id')->name('.users.avatar');
         Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->whereNumber('id')->name('.users.password');
         Route::post('files/{file}/upload-media', [FileController::class, 'uploadFileMedia'])->whereNumber('id')->name('.files.media');
-        Route::post('categories/{category}/upload-media', [CategoryController::class, 'uploadFileMedia'])->whereNumber('id')->name('.category.media');
         //file comments
         Route::post('files/{file}/comments', [FileController::class, 'assignComment'])->name('file.comment');
         Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');

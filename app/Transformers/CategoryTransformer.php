@@ -27,13 +27,7 @@ class CategoryTransformer extends TransformerAbstract
             'parent_id' => $category->parent_id,
             'name' => $category->name,
             'slug' => $category->slug,
-            'media' => $this->getMediaUrl($category),
         ];
-    }
-
-    private function getMediaUrl(Category $category)
-    {
-        return $category->getFirstMediaUrl('category-image');
     }
     public function IncludeFiles(Category $category)
     {

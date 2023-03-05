@@ -6,12 +6,10 @@ use App\Traits\ObservCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model implements HasMedia
+class Category extends Model
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes,ObservCategory;
+    use HasFactory,SoftDeletes,ObservCategory;
     protected $fillable = [
         'parent_id',
         'name',
@@ -20,11 +18,6 @@ class Category extends Model implements HasMedia
     public function files()
     {
         return $this->hasMany(File::class);
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('category-image')->singleFile();
     }
 
     public function subCategories()

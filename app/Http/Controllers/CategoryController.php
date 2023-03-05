@@ -103,32 +103,6 @@ class CategoryController extends Controller
             ->transformWith(CategoryTransformer::class)
             ->respond();
     }
-
-
-    public function uploadFileMedia(ChangeCategoryMediaRequest $request, Category $category)
-    {
-        /**
-         * @post('/api/panel/categories/{category}/upload-media')
-         * @name('panel..category.media')
-         * @middlewares('api', 'auth:sanctum')
-         */
-        try {
-            $category->addMediaFromRequest('file')
-                ->toMediaCollection('category-image');
-        } catch (FileDoesNotExist $exception) {
-            return apiResponse()
-                ->status(400)
-                ->message('File is missing.')
-                ->fail();
-        } catch (FileIsTooBig $exception) {
-            return apiResponse()
-                ->status(400)
-                ->message('File is too big.')
-                ->fail();
-        }
-        return apiResponse()->empty();
-    }
-
     /**
      * Update the specified resource in storage.
      *
