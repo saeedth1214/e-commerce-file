@@ -264,11 +264,12 @@ class FileController extends Controller
 
             $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-            $extension = $file->format();
-            $file_full_path = $file_without_ext . '.' . $extension;
+            $format = $file->format();
+
+            $file_path = $file_without_ext . '.' . $format;
 
 
-            if (!Storage::exists($file_full_path)) {
+            if (!Storage::exists($file_path)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
             $url = $file->link;
@@ -292,7 +293,6 @@ class FileController extends Controller
     public function generateS3TemporaryUrl(GenerateTemporaryUrlRequest $request, File $file)
     {
 
-
         // check Has been set preview  for main file
         if (!isset($file->getMedia('file-image')[0])) {
             return apiResponse()->message('There is no preview for this file.')->fail();
@@ -304,7 +304,11 @@ class FileController extends Controller
 
         $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
 
-        $url = Storage::temporaryUrl($file_without_ext . '.' . FileFormatEnum::asString($request->format), now()->addSeconds($expirationTime));
+        $format = $file->format();
+
+        $fullPath = $file_without_ext . '.' . $format;
+
+        $url = Storage::temporaryUrl($fullPath, now()->addSeconds($expirationTime));
 
         $file->update([
             'link' => $url

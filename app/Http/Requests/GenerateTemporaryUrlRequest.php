@@ -27,7 +27,6 @@ class GenerateTemporaryUrlRequest extends FormRequest
     {
         return [
             'expiration_time' => 'required|integer|min:0|max:604800',
-            'format' => ['required', 'integer', Rule::in(FileFormatEnum::asArray())]
         ];
     }
 }
