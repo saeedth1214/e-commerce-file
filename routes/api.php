@@ -109,7 +109,7 @@ Route::prefix('frontend')
         Route::get('files/most-visited', [FileController::class, 'mostVisited'])->name('files.most_visited');
         Route::get('files/{file}', [FileController::class, 'show'])->middleware('viewerCounter')->name('show.files');
         Route::get('plans', [PlanController::class, 'index'])->name('plans');
-        Route::get('plans/{plan:title}', [PlanController::class, 'show'])->name('show.plans');
+        Route::get('plans/{plan}', [PlanController::class, 'show'])->name('show.plans');
         Route::get('categories', [CategoryController::class, 'index'])->name('categories');
         Route::get('categories/menubar', [CategoryController::class, 'menubar'])->name('categories.menubar');
         Route::get('apply-voucher-code', [VoucherController::class], 'apply')->name('apply.voucher.code');
@@ -118,6 +118,7 @@ Route::prefix('frontend')
 
         //reactions
         Route::middleware('auth:sanctum')->group(function () {
+            Route::post('plans/{plan}/purchase', [PlanController::class, 'buySubscription'])->name('plan.purchase');
             Route::post('files/{file}/reactions', [FileController::class, 'toggleReaction'])->name('file.reaction');
             Route::post('files/{file}/download', [FileController::class, 'download'])->middleware('downloadFile')->name('file.download');
             Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');

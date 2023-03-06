@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\File;
+use App\Models\Plan;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -51,6 +52,16 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('file', function ($value) {
             $query = File::query();
+
+            $regex = '/^[0-9]+$/';
+
+            $column = preg_match($regex, $value) ?  'id' : 'title';
+
+            return $query->where($column, $value)->firstOrFail();
+        });
+
+        Route::bind('plan', function ($value) {
+            $query = Plan::query();
 
             $regex = '/^[0-9]+$/';
 

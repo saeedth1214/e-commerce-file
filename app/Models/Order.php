@@ -14,9 +14,8 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'voucher_id',
-        'total_items',
         'total_amount',
-        'total_amount_after_voucher_code',
+        'bought_at',
         'status',
     ];
 
@@ -31,18 +30,17 @@ class Order extends Model
         return $this->belongsTo(Voucher::class);
     }
 
-    public function files()
-    {
-        return $this->belongsToMany(File::class, 'order_has_files')->withPivot([
-            'amount',
-            'amount_after_voucher_code',
-            'bought_at'
-        ]);
-    }
-
     public function transactions()
     {
-
         return $this->hasMany(Transaction::class);
+    }
+
+    public function plans()
+    {
+        return $this->morphedByMany(Plan::class, 'orderable')->withPivot(['total_amount']);
+    }
+    public function files()
+    {
+        return $this->morphedByMany(File::class, 'orderable')->withPivot(['total_amount']);
     }
 }

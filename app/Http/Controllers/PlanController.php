@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderTypeEnum;
+use App\Enums\TransactionStatusEnum;
 use App\Traits\FilterQueryBuilder;
 use App\Models\Plan;
 use App\Transformers\PlanTransformer;
@@ -13,9 +15,14 @@ use App\Filters\FilterByDateTime;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedInclude;
 use App\Filters\FilterUniqueValue;
+use App\Http\Requests\PurchaseSubscriptionRequest;
 use App\Http\Requests\StorePlanCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Models\Order;
+use App\Models\Transaction;
 use App\Transformers\CommentTransformer;
+use Illuminate\Support\Facades\DB;
+use Shetabit\Multipay\Invoice;
 
 class PlanController extends Controller
 {
@@ -194,5 +201,45 @@ class PlanController extends Controller
         $updateCommentData = $request->safe()->all();
         $plan->comments()->where('id', $comment)->update($updateCommentData);
         return apiResponse()->empty();
+    }
+    public function buySubscription(PurchaseSubscriptionRequest $request, Plan $plan)
+    {
+
+        $orderData = [];
+        $orderData['user_id'] = auth()->id();
+        $orderData['total_amount'] = $request->amount;
+        $orderData['status'] = OrderTypeEnum::PENDING;
+        $orderData['bought_at'] = now();
+
+        $order = Order::query()->create($orderData);
+
+        $invoice = new Invoice;
+        $invoice->amount($request->amount);
+        $invoice->detail(['subscription' => 'خرید اشتراک']);
+
+        $uuid = $invoice->getUuid();
+        $transactionId = $invoice->getTransactionId();
+
+        $transactionData = [];
+
+        $transactionData['uuid'] = $uuid;
+        $transactionData['order_id'] = $order->id;
+        $transactionData['amount'] = $request->amount;
+        $transactionData['status'] = TransactionStatusEnum::Paying;
+        $transaction = $order->transactions()->create($transactionData);
+
+        // transaction ok 
+
+        DB::transaction(function () use ($order, $transaction, $plan) {
+
+            $order->update([
+                'status' => OrderTypeEnum::PAY_OK
+            ]);
+            $transaction->update([
+                'status' => TransactionStatusEnum::Payed
+            ]);
+
+            $order->plans()->attach($plan, ['total_amount' => request()->input('amount')]);
+        });
     }
 }

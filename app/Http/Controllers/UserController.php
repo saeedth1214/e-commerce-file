@@ -127,7 +127,7 @@ class UserController extends Controller
         //assign files
         if ($request->has('files')) {
             $files = $request->input('files');
-            $callback = fn ($pivot, $accessType = AccessTypeEnum::AdminAdded)
+            $callback = fn ($pivot, $accessType = AccessTypeEnum::AdminHaveAdded)
             =>
             [
                 $pivot->id => [
@@ -240,7 +240,7 @@ class UserController extends Controller
         =>
         [
             $pivot->id => [
-                'access' => AccessTypeEnum::AdminAdded,
+                'access' => AccessTypeEnum::AdminHaveAdded,
                 'activation_at' => now(),
                 'amount' => $this->calculateRebate($pivot),
                 'expired_at' => now()->addDays($pivot->activation_days),

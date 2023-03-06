@@ -85,11 +85,7 @@ class File extends Model implements HasMedia, ReactableInterface
     }
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_has_files')->withPivot([
-            'amount',
-            'rebate',
-            'amount_after_rebate'
-        ]);
+        return $this->morphToMany(Order::class, 'orderable');
     }
 
     public function scopeTagId(Builder $query, $tagId)

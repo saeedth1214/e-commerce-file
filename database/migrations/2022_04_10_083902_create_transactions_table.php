@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('order_id')->index();
-            $table->string('gateway_type')->index();
+            $table->string('gateway_type')->nullable()->index();
             $table->decimal('amount', 12, 0);
             $table->string('reference_code')->nullable();
             $table->string('authority')->nullable();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AccessTypeEnum;
 use App\Enums\OrderTypeEnum;
+use App\Enums\TransactionStatusEnum;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\File;
 use App\Models\Order;
@@ -13,6 +14,7 @@ use App\Traits\FilterQueryBuilder;
 use App\Transformers\OrderTransformer;
 use Illuminate\Support\Facades\DB;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Shetabit\Multipay\Invoice;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class OrderController extends Controller
@@ -70,31 +72,58 @@ class OrderController extends Controller
          * @name('panel.orders.store')
          * @middlewares('api', 'auth:sanctum')
          */
-        $order_data = [];
-        $total_items = 0;
+        $fileIds = $request->input('files');
+        $files = File::query()->whereIn('id', $fileIds)->get();
+        $orderData = [];
         $total_amount = 0;
-        $attachments = [];
+        $orderData['user_id'] = auth()->id();
+        $orderData['voucher_id'] = request()->input('voucher_id') ?? null;
+        $orderData['status'] = OrderTypeEnum::PENDING;
+        $orderData['bought_at'] = now();
 
-        // attach files to user
-        if ($request->has('files')) {
-            list($total_amount, $total_items, $attachments) = $this->attachingFiles($total_amount, $total_items, $request->input('files'));
-        }
+        $total_amount = $files->sum(
+            fn ($file)
+            =>
+            request()->has('voucher_id')
+                ?
+                $this->calculateVoucherCode(request()->input('voucher_id'), $this->calculateRebate($file))
+                :
+                $this->calculateRebate($file)
+        );
 
-        if ($request->has('voucher_id')) {
-            $this->applyVoucher($order_data, $total_amount);
-        } else {
-            $order_data['total_amount_after_voucher_code'] = $total_amount;
-        }
-        $order_data['total_amount'] = $total_amount;
-        $order_data['total_items'] = $total_items;
-        $order_data['user_id'] =  auth()->id();
-        $order_data['status'] =  OrderTypeEnum::PENDING;
-
-        DB::transaction(function () use ($order_data, $attachments) {
+        $orderData['total_amount'] = $total_amount;
+        $order = Order::query()->create($orderData);
 
 
-            $order = Order::query()->create($order_data);
-            $order->files()->sync($attachments->toArray());
+        $invoice = new Invoice;
+        $invoice->amount($total_amount);
+        $invoice->detail(['subscription' => 'خرید اشتراک']);
+
+        $uuid = $invoice->getUuid();
+        $transactionId = $invoice->getTransactionId();
+
+        $transactionData = [];
+
+        $transactionData['uuid'] = $uuid;
+        $transactionData['order_id'] = $order->id;
+        $transactionData['amount'] = $total_amount;
+        $transactionData['status'] = TransactionStatusEnum::Paying;
+        $transaction = $order->transactions()->create($transactionData);
+
+        // transaction ok 
+
+        DB::transaction(function () use ($order, $transaction, $files) {
+
+            $order->update([
+                'status' => OrderTypeEnum::PAY_OK
+            ]);
+            $transaction->update([
+                'status' => TransactionStatusEnum::Payed
+            ]);
+
+            foreach ($files as $file) {
+                $order->files()->attach($file, ['total_amount' => $this->calculateRebate($file)]);
+            }
         });
         return apiResponse()->empty();
     }
@@ -133,81 +162,5 @@ class OrderController extends Controller
          */
         $order->delete();
         return apiResponse()->empty();
-    }
-
-
-    // private function attachingPlan($order_data, $total_amount, $total_items, $planId)
-    // {
-
-    //     $order_data['plan_id'] = $planId;
-    //     $plan = Plan::query()->find($planId);
-    //     $order_data['activation_at'] = now();
-    //     $order_data['expired_at'] = now()->addDays($plan->activation_days);
-    //     $total_amount += $this->calculateRebate($plan);
-
-    //     $attachment = [
-    //         $plan->id => [
-    //             'access' => AccessTypeEnum::Payment,
-    //             'activation_at' => now(),
-    //             'amount' => $this->calculateRebate($plan),
-    //             'expired_at' => now()->addDays($plan->activation_days),
-    //             'bought_at' => now(),
-    //             'status' => PlanStatusEnum::ACTIVE
-    //         ]
-    //     ];
-    //     $total_items++;
-    //     auth()->user()->plans()->syncWithoutDetaching($attachment);
-
-    //     return [$order_data, $total_amount, $total_items];
-    // }
-
-    private function attachingFiles($total_amount, $total_items, $fileIds)
-    {
-        $files = File::query()->whereIn('id', $fileIds)->get();
-        foreach ($files as $file) {
-            $total_amount += $this->calculateRebate($file);
-            $total_items++;
-        }
-        $attachToUser = fn ($pivot) => [
-            $pivot->id => [
-                'amount' => $this->calculateRebate($pivot),
-                'bought_at' => now(),
-                'access' => AccessTypeEnum::Payment,
-                'voucher_id' => request()->input('voucher_id') ?? null,
-                'amount_after_voucher_code' => request()->has('voucher_id')
-                    ?
-                    $this->calculateVoucherCode(request()->input('voucher_id'), $this->calculateRebate($pivot))
-                    :
-                    $this->calculateRebate($pivot)
-            ]
-        ];
-        $attachments = $files->mapToGroups($attachToUser)->map(fn ($group) => $group->first());
-        /**
-         * @var User $user
-         */
-        $user = auth()->user();
-        $user->files()->syncWithoutDetaching($attachments);
-        $attachToOrder = fn ($pivot) => [
-            $pivot->id => [
-                'amount' => $this->calculateRebate($pivot),
-                'bought_at' => now(),
-                'amount_after_voucher_code' => request()->has('voucher_id')
-                    ?
-                    $this->calculateVoucherCode(request()->input('voucher_id'), $this->calculateRebate($pivot))
-                    :
-                    $this->calculateRebate($pivot)
-            ]
-        ];
-        $attachments = $files->mapToGroups($attachToOrder)->map(fn ($group) => $group->first());
-
-        return [$total_amount, $total_items, $attachments];
-    }
-
-    private function applyVoucher($order_data, $total_amount)
-    {
-        $order_data['voucher_id'] = request()->input('voucher_id');
-        $voucher = Voucher::query()->find(request()->input('voucher_id'));
-        $total_amount_after_voucher_code = $this->calculateVoucherCode($voucher, $total_amount);
-        $order_data['total_amount_after_voucher_code'] = $total_amount_after_voucher_code;
     }
 }

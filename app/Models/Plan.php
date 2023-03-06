@@ -28,12 +28,10 @@ class Plan extends Model
         return $this->belongsToMany(User::class, 'user_has_plans');
     }
 
-    public function transaction()
+    public function orders()
     {
-        return $this->morphOne(Transaction::class, 'model');
+        return $this->morphToMany(Order::class, 'orderable');
     }
-
-
 
     public function scopeUserId(Builder $query, int $user_id)
     {
