@@ -9,17 +9,19 @@
 
 namespace App\Transformers;
 
+use App\Enums\TransactionStatusEnum;
 use App\Models\Transaction;
+use App\Traits\ConvertDateTime;
 use League\Fractal\TransformerAbstract;
 
 class TransactionTransformer extends TransformerAbstract
 {
+    use ConvertDateTime;
+    
     protected array $availableIncludes = [
-        'user',
         'order'
     ];
     public function transform(Transaction $transaction)
-
     {
         return [
             'uuid' => $transaction->uuid,
@@ -28,18 +30,12 @@ class TransactionTransformer extends TransformerAbstract
             'amount' => $transaction->amount,
             'reference_code' => $transaction->reference_code,
             'authority' => $transaction->authority,
+            'status_desc' => TransactionStatusEnum::getDescription(TransactionStatusEnum::getKey($transaction->status)),
             'status' => $transaction->status,
-            'payed_at' => $transaction->payed_at,
+            'payed_at' => $this->shamsiDate($transaction->payed_at),
         ];
     }
 
-    public function IncludeUser(Transaction $transaction)
-    {
-        if (!$transaction->user) {
-            return $this->null();
-        }
-        return $this->item($transaction->user, new UserTransformer());
-    }
 
     public function IncludeOrder(Transaction $transaction)
     {

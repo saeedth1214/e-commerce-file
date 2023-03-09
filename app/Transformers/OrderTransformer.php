@@ -42,7 +42,6 @@ class OrderTransformer extends TransformerAbstract
             'id' => $order->id,
             'total_items' => $order->total_items,
             'total_amount' => $order->total_amount,
-            'total_amount_after_voucher_code' => $order->total_amount_after_voucher_code,
             'rebate' => optional($order->voucher)->rebate,
             'percentage' => optional($order->voucher)->percentage,
             'status_dec' => OrderTypeEnum::getDescription(OrderTypeEnum::getKey($order->status)),

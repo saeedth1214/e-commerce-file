@@ -19,8 +19,7 @@ class CreateUserHasfilesTable extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('file_id')->constrained('files')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('voucher_id')->nullable();
-            $table->decimal('amount', 12, 0, true);
-            $table->decimal('amount_after_voucher_code', 12);
+            $table->decimal('total_amount', 12, 0, true);
             $table->tinyInteger('access')->default(AccessTypeEnum::AdminHaveAdded);
             $table->timestamp('bought_at');
             $table->index(['user_id', 'file_id']);

@@ -302,7 +302,6 @@ class UserController extends Controller
     public function userHasFile(int $userId, int $fileId)
     {
 
-
         $count = User::query()->userHasThisFile($userId, $fileId);
 
         return apiResponse()->content(['count' => $count])->success();

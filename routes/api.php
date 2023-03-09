@@ -17,6 +17,7 @@ use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TransactionController;
 
 // auth route
 Route::prefix('auth')
@@ -55,9 +56,11 @@ Route::prefix('panel')
         Route::apiResource('vouchers', VoucherController::class);
         Route::apiResource('tags', TagController::class);
         Route::apiResource('attributes', AttributeController::class);
+        Route::apiResource('transactions', TransactionController::class)->only(['inedx', 'show']);
         Route::post('users/{user}/change-avatar', [UserController::class, 'changeAvatar'])->whereNumber('id')->name('.users.avatar');
         Route::patch('users/{user}/change-password', [UserController::class, 'changePassword'])->whereNumber('id')->name('.users.password');
         Route::post('files/{file}/upload-media', [FileController::class, 'uploadFileMedia'])->whereNumber('id')->name('.files.media');
+
         //file comments
         Route::post('files/{file}/comments', [FileController::class, 'assignComment'])->name('file.comment');
         Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');
@@ -115,9 +118,12 @@ Route::prefix('frontend')
         Route::get('apply-voucher-code', [VoucherController::class], 'apply')->name('apply.voucher.code');
         Route::get('plans/{plan}/comments', [PlanController::class, 'CommentsOfPlan'])->name('plan.comments');
         Route::get('files/{file}/comments', [FileController::class, 'CommentsOfFile'])->name('file.comments');
+        Route::get('transaction/plan/verify', [PlanController::class, 'verifyTransaction'])->name('plan.verify.transaction');
+        Route::get('transaction/order/verify', [OrderController::class, 'verifyTransaction'])->name('file.verify.transaction');
 
-        //reactions
         Route::middleware('auth:sanctum')->group(function () {
+            // tracking transaction with uuid
+            Route::get('transaction/tracking/{uuid}', [TransactionController::class, 'trackingByUuid'])->name('tracking.transaction');
             Route::post('plans/{plan}/purchase', [PlanController::class, 'buySubscription'])->name('plan.purchase');
             Route::post('files/{file}/reactions', [FileController::class, 'toggleReaction'])->name('file.reaction');
             Route::post('files/{file}/download', [FileController::class, 'download'])->middleware('downloadFile')->name('file.download');

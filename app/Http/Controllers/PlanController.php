@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AccessTypeEnum;
 use App\Enums\OrderTypeEnum;
+use App\Enums\PlanTypeEnum;
 use App\Enums\TransactionStatusEnum;
 use App\Traits\FilterQueryBuilder;
 use App\Models\Plan;
@@ -20,9 +22,15 @@ use App\Http\Requests\StorePlanCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Transformers\CommentTransformer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
+use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
+use Shetabit\Payment\Facade\Payment;
 
 class PlanController extends Controller
 {
@@ -205,41 +213,103 @@ class PlanController extends Controller
     public function buySubscription(PurchaseSubscriptionRequest $request, Plan $plan)
     {
 
-        $orderData = [];
-        $orderData['user_id'] = auth()->id();
-        $orderData['total_amount'] = $request->amount;
-        $orderData['status'] = OrderTypeEnum::PENDING;
-        $orderData['bought_at'] = now();
+        //create order
+
+        $orderData = $this->makeOrder();
 
         $order = Order::query()->create($orderData);
 
-        $invoice = new Invoice;
-        $invoice->amount($request->amount);
-        $invoice->detail(['subscription' => 'خرید اشتراک']);
-
+        // create invoice
+        $invoice = $this->makeInvoice($request->amount);
         $uuid = $invoice->getUuid();
-        $transactionId = $invoice->getTransactionId();
 
-        $transactionData = [];
-
-        $transactionData['uuid'] = $uuid;
-        $transactionData['order_id'] = $order->id;
-        $transactionData['amount'] = $request->amount;
-        $transactionData['status'] = TransactionStatusEnum::Paying;
+        // create transaction
+        $transactionData = $this->makeTransaction($uuid, $order->id);
         $transaction = $order->transactions()->create($transactionData);
 
-        // transaction ok 
+        // create cache
+        Cache::put($uuid, [
+            'planId' => $plan->id,
+            'userId' => auth()->id()
+        ], 120);
 
-        DB::transaction(function () use ($order, $transaction, $plan) {
+        return Payment::callbackUrl(config('payment-urls.plan.callBackUrl') . "?uuid={$uuid}")->purchase($invoice, function ($driver, $transactionId) use ($transaction) {
+            $transaction->update([
+                'authority' => $transactionId
+            ]);
+        })->pay();
+    }
 
+    public function verifyTransaction(Request $request)
+    {
+        try {
+            if ($request->filled('uuid') && Cache::has($request->uuid)) {
+                $cacheData = Cache::pull($request->uuid);
+                $user = User::query()->find($cacheData['userId']);
+                $order = $user->orders()->latest()->first();
+                $transaction = Transaction::query()->where('uuid', $request->uuid)->first();
+                $receipt = Payment::amount($transaction->amount)->transactionId($transaction->authority)->verify();
+                DB::transaction(function () use ($transaction, $receipt, $order, $user, $cacheData) {
+                    $plan = Plan::query()->find($cacheData['planId']);
+                    $order->update([
+                        'status' => OrderTypeEnum::PAY_OK
+                    ]);
+                    $transaction->update([
+                        'status' => TransactionStatusEnum::Payed,
+                        'reference_code' => $receipt->getReferenceId(),
+                        'payed_at' => now()
+                    ]);
+                    $order->plans()->attach($plan, ['total_amount' => $transaction->amount]);
+                    $user->plans()->attach($plan, [
+                        'amount' => $transaction->amount,
+                        'activation_at' => now(),
+                        'expired_at' => now()->addDays(PlanTypeEnum::convertToDays($plan->type)),
+                        'access' => AccessTypeEnum::Payment,
+                        'bought_at' => now(),
+                    ]);
+                });
+            }
+
+            return redirect(config('payment-urls.plan.afterCallback') . "?uuid={$request->uuid}");
+        } catch (InvalidPaymentException $exception) {
             $order->update([
-                'status' => OrderTypeEnum::PAY_OK
+                'status' => OrderTypeEnum::PAY_FAILED
             ]);
             $transaction->update([
-                'status' => TransactionStatusEnum::Payed
+                'status' => TransactionStatusEnum::Canceled
             ]);
+            return redirect(config('payment-urls.plan.afterCallback') . "?uuid={$request->uuid}");
+        }
+    }
 
-            $order->plans()->attach($plan, ['total_amount' => request()->input('amount')]);
-        });
+    private function makeOrder()
+    {
+        $orderData = [];
+        $orderData['user_id'] = auth()->id();
+        $orderData['total_amount'] = request()->input('amount', 0);
+        $orderData['total_items'] = 1;
+        $orderData['status'] = OrderTypeEnum::PENDING;
+        $orderData['bought_at'] = now();
+
+        return $orderData;
+    }
+
+    private function makeTransaction($uuid, $orderId)
+    {
+        $transactionData = [];
+        $transactionData['uuid'] = $uuid;
+        $transactionData['order_id'] = $orderId;
+        $transactionData['amount'] = request()->input('amount', 0);
+        $transactionData['status'] = TransactionStatusEnum::Paying;
+
+        return $transactionData;
+    }
+
+    private function makeInvoice($amount)
+    {
+
+        $invoice = new Invoice;
+        $invoice->amount($amount);
+        return $invoice;
     }
 }

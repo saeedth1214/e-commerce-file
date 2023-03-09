@@ -19,7 +19,7 @@ final class PlanTypeEnum extends Enum implements LocalizedEnum, LocalizeFaDescri
 
     private static array $incrementDays = [
         1 => 30,
-        2 => 120,
+        2 => 90,
         3 => 180,
     ];
 
@@ -33,8 +33,8 @@ final class PlanTypeEnum extends Enum implements LocalizedEnum, LocalizeFaDescri
             ]
         ];
     }
-    public static function convertToDays(int $value): int
+    public static function convertToDays(int $key): int
     {
-        return static::$incrementDays[$value];
+        return static::$incrementDays[$key];
     }
 }

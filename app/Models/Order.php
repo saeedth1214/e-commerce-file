@@ -15,9 +15,11 @@ class Order extends Model
         'user_id',
         'voucher_id',
         'total_amount',
+        'total_items',
         'bought_at',
         'status',
     ];
+
 
     public function user()
     {
