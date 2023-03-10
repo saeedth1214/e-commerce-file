@@ -20,7 +20,7 @@ class CommentTransformer extends TransformerAbstract
 {
     use ConvertDateTime;
     protected  array $availableIncludes = [
-        'model',
+        'file',
         'replies',
         'acceptedReplies',
         'user',
@@ -39,13 +39,13 @@ class CommentTransformer extends TransformerAbstract
         ];
     }
 
-    public function IncludeModel(Comment $comment)
+    public function IncludeFile(Comment $comment)
     {
-        $model = $comment->model;
-        if ($model instanceof Plan) {
-            return $this->item($model, fn ($model) => ['id' => $model->id, 'title' => $model->title, 'type' => 'plans']);
+        $file = $comment->file;
+        if (!$file) {
+            return $this->null();
         }
-        return $this->item($model, fn ($model) => ['id' => $model->id, 'title' => $model->title, 'type' => 'files']);
+        return $this->item($file, fn ($file) => ['id' => $file->id, 'title' => $file->title]);
     }
 
     public function IncludeReplies(Comment $comment)

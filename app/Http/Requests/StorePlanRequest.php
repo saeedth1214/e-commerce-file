@@ -26,7 +26,7 @@ class StorePlanRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:2|max:256|unique:plans,title,NULL,id,deleted_at,null',
+            'title' => 'required|string|min:2|max:256',
             'description' => 'nullable|string',
             'percentage' => 'nullable|boolean',
             'rebate' => $this->input('percentage') ? 'nullable|integer|min:0|max:100' : 'nullable|integer|min:0|max:4294967295',

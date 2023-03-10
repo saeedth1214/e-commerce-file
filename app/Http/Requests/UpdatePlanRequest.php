@@ -28,7 +28,7 @@ class UpdatePlanRequest extends FormRequest
         return [
             'title' => [
                 'required', 'string', 'min:2', 'max:256',
-                Rule::unique('plans', 'title')->ignore($this->plan)
+                Rule::unique('plans', 'title')->ignore($this->plan)->whereNull('deleted_at')
             ],
             'description' => 'nullable|string',
             'percentage' => 'nullable|boolean',

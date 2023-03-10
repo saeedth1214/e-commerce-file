@@ -10,12 +10,9 @@ use App\Transformers\CategoryTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Filters\FilterByDateTime;
-use App\Http\Requests\ChangeCategoryMediaRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Spatie\QueryBuilder\AllowedInclude;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class CategoryController extends Controller
 {

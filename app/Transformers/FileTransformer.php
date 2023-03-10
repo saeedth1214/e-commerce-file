@@ -90,7 +90,7 @@ class FileTransformer extends TransformerAbstract
             fn ($file)
             => [
                 'user_id' => optional($file->pivot)->user_id,
-                'amount_after_rebate' => optional($file->pivot)->amount,
+                'amount_after_rebate' => optional($file->pivot)->total_amount,
                 'bought_at' => $this->shamsiDate(optional($file->pivot)->bought_at)
             ]
         );

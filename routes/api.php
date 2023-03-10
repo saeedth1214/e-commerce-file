@@ -71,9 +71,6 @@ Route::prefix('panel')
         Route::post('users/{user}/plans', [UserController::class, 'assignPlan'])->name('user.assign.plan');
         Route::put('users/{user}/plans/{plan}/de-activate', [UserController::class, 'deActivatePlan'])->name('user.inActive.plan');
         Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');
-        //plan comments
-        Route::post('plans/{plan}/comments', [PlanController::class, 'assignComment'])->name('plan.comment');
-        Route::put('plans/{plan}/comments/{comment}', [PlanController::class, 'updateComment'])->name('plan.update.comment');
         // assign vouchers to user
         Route::post('users/{user}/assign-vouchers', [UserController::class, 'assignVouchers'])->name('user.assign-vouchers');
         //apply voucher

@@ -18,16 +18,12 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedInclude;
 use App\Filters\FilterUniqueValue;
 use App\Http\Requests\PurchaseSubscriptionRequest;
-use App\Http\Requests\StorePlanCommentRequest;
-use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Transformers\CommentTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Payment\Facade\Payment;
@@ -162,54 +158,6 @@ class PlanController extends Controller
         return apiResponse()->empty();
     }
 
-    public function assignComment(StorePlanCommentRequest $request, Plan $plan)
-    {
-        /**
-         * @post('/api/panel/plans/{plan}/comments')
-         * @name('panel.plan.comment')
-         * @middlewares('api', 'auth:sanctum')
-         */
-        $commentData = $request->safe()->all();
-        $commentData['user_id'] = $this->user->id;
-        $comment = $plan->comments()->create($commentData);
-
-        return fractal()
-            ->item($comment)
-            ->transformWith(CommentTransformer::class)
-            ->withResourceName('comments')
-            ->respond();
-    }
-
-    public function CommentsOfPlan(Plan $plan)
-    {
-        /**
-         * @get('/api/frontend/plans/{plan}/comments')
-         * @name('frontend.plan.comments')
-         * @middlewares('api')
-         */
-        $per_page = request('per_page', 15);
-        $comments = $plan->acceptedMainComments()->paginate($per_page);
-        return fractal()
-            ->collection($comments)
-            ->transformWith(CommentTransformer::class)
-            ->paginateWith(new IlluminatePaginatorAdapter($comments))
-            ->withResourceName('comments')
-            ->respond();
-    }
-
-
-    public function updateComment(UpdateCommentRequest $request, Plan $plan, int $comment)
-    {
-        /**
-         * @put('/api/panel/plans/{plan}/comments/{comment}')
-         * @name('panel.plan.update.comment')
-         * @middlewares('api', 'auth:sanctum')
-         */
-
-        $updateCommentData = $request->safe()->all();
-        $plan->comments()->where('id', $comment)->update($updateCommentData);
-        return apiResponse()->empty();
-    }
     public function buySubscription(PurchaseSubscriptionRequest $request, Plan $plan)
     {
 
