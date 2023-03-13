@@ -10,7 +10,7 @@ use BenSampo\Enum\Enum;
  * @method static JPG()
  * @method static PNG()
  * @method static JPEG()
- * @method static PSD()
+ * @method static ZIP()
  */
 final class FileFormatEnum extends Enum
 {
@@ -20,6 +20,7 @@ final class FileFormatEnum extends Enum
     const PNG =   4;
     const JPEG =  5;
     const PSD =   6;
+    const ZIP =   7;
 
 
     public static function asString(int $enumValue)
