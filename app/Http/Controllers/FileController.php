@@ -268,10 +268,10 @@ class FileController extends Controller
 
             $file_path = $file_without_ext . '.' . $format;
 
-
             if (!Storage::exists($file_path)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
+
             $url = $file->link;
 
             // handle daily download count

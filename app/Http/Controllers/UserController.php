@@ -131,7 +131,7 @@ class UserController extends Controller
             =>
             [
                 $pivot->id => [
-                    'amount' => $this->calculateRebate($pivot), 'bought_at' => now(), 'access' => $accessType
+                    'total_amount' => $this->calculateRebate($pivot), 'bought_at' => now(), 'access' => $accessType
                 ]
             ];
             $attachments = $this->attachingPivots(

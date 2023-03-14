@@ -125,10 +125,10 @@ class User extends Authenticatable implements HasMedia, ReactsInterface
             ->updateExistingPivot($planId, ['status' => PlanStatusEnum::INACTIVE]);
     }
 
-    public  function scopeUserHasThisFile(Builder $query, int $userId, int $fileId)
+    public  function scopeUserHasThisFile(Builder $query,int $fileId)
     {
-        return static::whereHas('files', function ($query) use ($fileId) {
+        return  $query->whereHas('files', function ($query) use ($fileId) {
             $query->where('files.id', $fileId);
-        })->where('id', $userId)->count();
+        })->where('id', auth()->id())->count();
     }
 }

@@ -20,9 +20,7 @@ class EnsureUserCanDownloadFile
     public function handle(Request $request, Closure $next)
     {
 
-        return $next($request);
-
-        $count = User::query()->userHasThisFile(auth()->id(), $request->file->id);
+        $count = User::query()->userHasThisFile($request->file->id);
         // the user have bought this file .
         if ($count) {
             return $next($request);
