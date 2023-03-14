@@ -62,7 +62,7 @@ class FileController extends Controller
                 AllowedFilter::custom('unique', new FilterUniqueValue),
                 AllowedFilter::exact('sale_as_single'),
                 AllowedFilter::exact('percentage'),
-                AllowedFilter::custom('free', new FilterFreeFiles),
+                AllowedFilter::custom('amount', new FilterFreeFiles),
                 AllowedFilter::custom('rebate', new FilterDiscountedFiles),
                 AllowedFilter::scope('category', 'categoryId'),
                 AllowedFilter::scope('category_name', 'categoryName'),
