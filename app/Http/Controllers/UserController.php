@@ -26,7 +26,7 @@ use App\Http\Requests\AssignVoucherToUserRequest;
 use App\Traits\AmountAfterModelRebate;
 use App\Traits\ConvertDateTime;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -169,8 +169,8 @@ class UserController extends Controller
          * @name('panel..users.password')
          * @middlewares('api', 'auth:sanctum')
          */
-        $password = $request->input('password');
-        $user->update(compact('password'));
+        $newPassword = Hash::make($request->password);
+        $user->update(compact('newPassword'));
         return apiResponse()->empty();
     }
 
