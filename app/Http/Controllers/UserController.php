@@ -169,8 +169,8 @@ class UserController extends Controller
          * @name('panel..users.password')
          * @middlewares('api', 'auth:sanctum')
          */
-        $newPassword = Hash::make($request->password);
-        $user->update(compact('newPassword'));
+        $password = Hash::make($request->password);
+        $user->update(compact('password'));
         return apiResponse()->empty();
     }
 
