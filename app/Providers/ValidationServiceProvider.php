@@ -18,7 +18,6 @@ class ValidationServiceProvider extends ServiceProvider
         });
 
         Validator::extend('username', function ($attribute, $value, $parameters, $validator) {
-            // $email = preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', $value);
             $email = preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $value);
 
             $mobile = preg_match('/^[9][0|1|2|3|4|9][0-9]{8}$/', $value);

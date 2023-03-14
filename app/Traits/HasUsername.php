@@ -13,7 +13,7 @@ trait HasUsername
      */
     protected function getUsernameType($username): string
     {
-        $pattern = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+        $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
 
         if (preg_match($pattern, $username)) {
             return 'email';
