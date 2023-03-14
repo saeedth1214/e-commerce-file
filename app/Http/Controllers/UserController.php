@@ -21,6 +21,7 @@ use App\Http\Requests\UserIndexRequest;
 use App\Filters\FilterUniqueValue;
 use App\Enums\AccessTypeEnum;
 use App\Enums\PlanStatusEnum;
+use App\Enums\PlanTypeEnum;
 use App\Http\Requests\AssignPlanRequest;
 use App\Http\Requests\AssignVoucherToUserRequest;
 use App\Traits\AmountAfterModelRebate;
@@ -243,7 +244,7 @@ class UserController extends Controller
                 'access' => AccessTypeEnum::AdminHaveAdded,
                 'activation_at' => now(),
                 'amount' => $this->calculateRebate($pivot),
-                'expired_at' => now()->addDays($pivot->activation_days),
+                'expired_at' => now()->addDays(PlanTypeEnum::convertToDays($pivot->type)),
                 'bought_at' => now(),
                 'status' => PlanStatusEnum::ACTIVE
             ]
