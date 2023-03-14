@@ -69,7 +69,7 @@ Route::prefix('panel')
 
         //user plan
         Route::post('users/{user}/plans', [UserController::class, 'assignPlan'])->name('user.assign.plan');
-        Route::put('users/{user}/plans/{plan}/de-activate', [UserController::class, 'deActivatePlan'])->name('user.inActive.plan');
+        Route::put('users/{user}/plans/{planId}/de-activate', [UserController::class, 'deActivatePlan'])->name('user.inActive.plan');
         Route::get('users/{user}/active-plan', [UserController::class, 'activePlan'])->name('user.activePlan');
         // assign vouchers to user
         Route::post('users/{user}/assign-vouchers', [UserController::class, 'assignVouchers'])->name('user.assign-vouchers');
