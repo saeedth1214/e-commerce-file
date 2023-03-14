@@ -7,7 +7,7 @@ use App\Observers\OrderObserver;
 
 trait ObservOrder
 {
-    public static function bootObservFile(): void
+    public static function bootObservOrder(): void
     {
         Order::observe(OrderObserver::class);
     }

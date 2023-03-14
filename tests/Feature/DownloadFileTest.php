@@ -9,18 +9,20 @@ use App\Models\User;
 use App\Traits\DownloadKey;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class DownloadFileTest extends TestCase
 {
 
     use DownloadKey;
+
     protected function setUp(): void
     {
 
         parent::setUp();
 
-        Event::fake();
+        // Event::fake();
 
         $this->userLogin();
     }
@@ -40,7 +42,6 @@ class DownloadFileTest extends TestCase
     public function user_can_download_single_file_if_purchased_it()
     {
 
-        // $this->withExceptionHandling();
         $res = $this->assignSingleFileToUser();
 
         $res->assertStatus(204);
@@ -49,17 +50,15 @@ class DownloadFileTest extends TestCase
 
         $files = $user->files()->get();
 
+        $files[0]->update(['link' => 'test link']);
 
         $this->assertEquals(1, $files->count());
 
-        $res = $this->postJson("/api/frontend/files/{$files[0]}/download");
+        $res = $this->postJson("/api/frontend/files/{$files[0]->id}/download");
 
-        // dd($res->content());
         // Event::assertDispatched(DailyFileDownloadEvent::class, function ($event) use ($files) {
-
         //     return $event->fileId === $files[0]->id;
         // });
-
 
         $downloadKey = $this->fileDownloadKey();
 
@@ -69,7 +68,7 @@ class DownloadFileTest extends TestCase
     }
 
     /**
-     * @tes
+     * @test
      */
 
     public function user_can_download_file_if_have_got_a_plan()
@@ -86,7 +85,6 @@ class DownloadFileTest extends TestCase
 
         $res = $this->post('api/frontend/files"' . $files[0] . '"/download');
 
-        return;
         $userKey = $this->userKey($user->id);
 
         $downloadKey = $this->fileDownloadKey();
@@ -98,6 +96,29 @@ class DownloadFileTest extends TestCase
         $this->assertNotNull($download_data);
 
         $this->assertEquals(1, $download_data[$userKey]);
+    }
+
+    /**
+     * @test
+     */
+
+    public function user_cant_download_file_if_does_not_have_plan_or_file()
+    {
+        $fileData = $this->fileData(1);
+
+        $res = $this->post('/api/panel/files', $fileData);
+
+        $user = auth()->user();
+
+        $files = $user->files()->get();
+
+        $user->deActivatePlan(2);
+
+        $this->assertEquals(0, $files->count());
+
+        $res = $this->postJson("/api/frontend/files/1/download");
+
+        $res->assertStatus(403);
     }
     private function userLogin()
     {
@@ -114,7 +135,6 @@ class DownloadFileTest extends TestCase
         $fileData = $this->fileData(1);
 
         $res = $this->post('/api/panel/files', $fileData);
-
 
         $res->assertStatus(200);
 
@@ -161,13 +181,12 @@ class DownloadFileTest extends TestCase
     {
 
         return  [
-            'title' => 'test-title-200',
+            'title' => 'test.title.200',
             'percentage' => 1,
             'rebate' => 5,
             'amount' => 5000,
             'category_id' => 1,
-            'sale_as_single' => $single
-
+            'sale_as_single' => $single,
         ];
     }
 }
