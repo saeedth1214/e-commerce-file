@@ -24,6 +24,7 @@ use App\Http\Requests\AssignAttributeRequest;
 use App\Http\Requests\GenerateTemporaryUrlRequest;
 use App\Http\Requests\StoreFileCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Traits\FileFullPath;
 use App\Transformers\CommentTransformer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Event;
@@ -31,7 +32,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    use FilterQueryBuilder;
+    use FilterQueryBuilder, FileFullPath;
     private $user = null;
 
     public function __construct()
@@ -260,15 +261,10 @@ class FileController extends Controller
             if (is_null($file->link)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
-            $file_name = $file->getMedia('file-image')[0]->file_name;
 
-            $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
+            $fullPath = $this->ResolveFileFullPath($file);
 
-            $format = $file->format();
-
-            $file_path = $file_without_ext . '.' . $format;
-
-            if (!Storage::exists($file_path)) {
+            if (!Storage::exists($fullPath)) {
                 return apiResponse()->message('This file not found.')->fail();
             }
 
@@ -298,15 +294,9 @@ class FileController extends Controller
             return apiResponse()->message('There is no preview for this file.')->fail();
         }
 
+        $fullPath = $this->ResolveFileFullPath($file);
+
         $expirationTime = $request->input('expiration_time');
-
-        $file_name = $file->getMedia('file-image')[0]->file_name;
-
-        $file_without_ext = substr($file_name, 0, strrpos($file_name, "."));
-
-        $format = $file->format();
-
-        $fullPath = $file_without_ext . '.' . $format;
 
         $url = Storage::temporaryUrl($fullPath, now()->addSeconds($expirationTime));
 
