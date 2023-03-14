@@ -9,6 +9,7 @@ use App\Http\Requests\StoreTagRequest;
 use Illuminate\Http\JsonResponse;
 use App\Transformers\TagTransformer;
 use App\Http\Requests\UpdateTagRequest;
+use Illuminate\Support\Facades\Cache;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -133,5 +134,19 @@ class TagController extends Controller
         $tag->delete();
 
         return apiResponse()->empty();
+    }
+
+    public function landingPage()
+    {
+
+        $tags = Cache::remember('landingtags', 86400, function () {
+            return Tag::query()->latest()->take(5)->get();
+        });
+
+        return fractal()
+            ->collection($tags)
+            ->transformWith(new TagTransformer())
+            ->withResourceName('tags')
+            ->respond();
     }
 }

@@ -106,6 +106,7 @@ Route::prefix('frontend')
         Route::get('users', [UserController::class, 'index'])->name('users');
         Route::get('files', [FileController::class, 'index'])->name('files');
         Route::get('tags', [TagController::class, 'index'])->name('tags');
+        Route::get('tags/landing-page', [TagController::class, 'landingPage'])->name('tags.landing.page');
         Route::get('files/most-visited', [FileController::class, 'mostVisited'])->name('files.most_visited');
         Route::get('files/{file}', [FileController::class, 'show'])->middleware('viewerCounter')->name('show.files');
         Route::get('plans', [PlanController::class, 'index'])->name('plans');
