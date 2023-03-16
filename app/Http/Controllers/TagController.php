@@ -140,7 +140,7 @@ class TagController extends Controller
     {
 
         $tags = Cache::remember('landingtags', 86400, function () {
-            return Tag::query()->latest()->take(4)->get();
+            return Tag::query()->latest()->take(3)->get();
         });
 
         return fractal()
