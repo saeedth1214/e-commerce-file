@@ -341,4 +341,15 @@ class FileController extends Controller
 
         return apiResponse()->content(['most-visited' => $mostVisitedFiles])->success();
     }
+
+    public function downloadCsv()
+    {
+        if (Storage::disk('public')->exists('csv.pdfs')) {
+            $url = Storage::disk('public')->url('csv.pdf');
+            return apiResponse()->content([
+                'url' => $url
+            ])->success();
+        }
+        return apiResponse()->empty();
+    }
 }
