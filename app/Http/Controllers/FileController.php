@@ -344,7 +344,7 @@ class FileController extends Controller
 
     public function downloadCsv()
     {
-        if (Storage::disk('public')->exists('csv.pdfs')) {
+        if (Storage::disk('public')->exists('csv.pdf')) {
             $url = Storage::disk('public')->url('csv.pdf');
             return apiResponse()->content([
                 'url' => $url
