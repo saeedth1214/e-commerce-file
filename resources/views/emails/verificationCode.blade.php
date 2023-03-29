@@ -24,7 +24,6 @@
             border-radius: 5px;
             margin: 1rem auto;
             text-align: center;
-            position: relative;
         }
 
         .icon {
@@ -51,8 +50,6 @@
 
         footer {
             width: 100%;
-            position: absolute;
-            bottom: 0px;
             background: #53c6fd;
             padding-top: 0.7rem;
         }
@@ -69,7 +66,7 @@
 
 <body>
 
-    <div class="mail-body">
+    <div class="mail-body" style="position: relative">
         <span class="icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#4974ff"
                 class="bi bi-envelope-at" viewBox="0 0 16 16">
@@ -80,16 +77,16 @@
             </svg>
         </span>
         <hr>
-
         <p class="verify-text">
             .به منظور دسترسی به خدمات سایت لطفا ایمیل خود را تایید کنید
         </p>
         <p>
             <button class="btn">{{ $code }}</button>
         </p>
-        <footer>
+        <footer style="position: absolute;bottom: 0px">
             <div>
-                .می باشد <a href='https://filymo.ir' style="text-decoration: none;color:#4472f1;font-weight: 600">filymo.ir</a>
+                .می باشد <a href='https://filymo.ir'
+                    style="text-decoration: none;color:#4472f1;font-weight: 600">filymo.ir</a>
                 کلیه خدمات این سایت متعلق به
             </div>
             <ul>
