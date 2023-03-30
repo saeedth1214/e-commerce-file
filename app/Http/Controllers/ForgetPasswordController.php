@@ -59,7 +59,7 @@ class ForgetPasswordController extends Controller
     
     private function sendForgetPasswordEmail($email,$token)
     {
-        return SendForgetPasswordTokenJob::dispatch($email, $token);
+        return SendForgetPasswordTokenJob::dispatchSync($email, $token);
     }
     
     
