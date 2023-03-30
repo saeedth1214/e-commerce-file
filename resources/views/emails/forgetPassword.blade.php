@@ -95,7 +95,7 @@
         </p>
         <p>
             <a class="resetPasswordLink"
-                href="https://filymo.ir/authenticate/reset-password/?token=$token&email={{urlencode($email)}}"
+                href="https://filymo.ir/authenticate/reset-password/?token={{ $token }}&email={{ urlencode($email) }}"
                 target="_blank">
                 تایید ایمیل
             </a>
