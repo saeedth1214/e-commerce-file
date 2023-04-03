@@ -10,6 +10,7 @@ use App\Models\File;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Voucher;
 use App\Traits\AmountAfterModelRebate;
 use App\Traits\FilterQueryBuilder;
 use App\Transformers\OrderTransformer;
@@ -80,7 +81,7 @@ class OrderController extends Controller
         $fileIds = $request->input('files');
         $files = File::query()->whereIn('id', $fileIds)->get();
 
-        $orderData = $this->makeOrder($files, $request->voucher_id);
+        $orderData = $this->makeOrder($files);
         $order = Order::query()->create($orderData);
 
         $invoice = $this->makeInvoice($orderData['total_amount']);
@@ -91,12 +92,13 @@ class OrderController extends Controller
 
         $transaction = $order->transactions()->create($transactionData);
 
-        // create cache
-        Cache::put($uuid, [
+        $cacheData = [
             'fileIds' => $fileIds,
             'userId' => auth()->id(),
-            'voucherId' => $request->voucher_id
-        ], 120);
+        ];
+        $cacheData = !$request->voucher_id ?: $cacheData['voucherId'] = $request->voucher_id;
+        // create cache
+        Cache::put($uuid, $cacheData, 120);
 
         return Payment::callbackUrl(config('payment-urls.order.callBackUrl') . "?uuid={$uuid}")->purchase($invoice, function ($driver, $transactionId) use ($transaction) {
             $transaction->update([
@@ -145,12 +147,13 @@ class OrderController extends Controller
     {
         try {
             if ($request->filled('uuid') && Cache::has($request->uuid)) {
-                $cacheData = Cache::pull($request->uuid);
-                $user = User::query()->find($cacheData['userId']);
-                $order = $user->orders()->latest()->first();
+                $cacheData   = Cache::pull($request->uuid);
+                $user        = User::query()->find($cacheData['userId']);
                 $transaction = Transaction::query()->where('uuid', $request->uuid)->first();
-                $receipt = Payment::amount($transaction->amount)->transactionId($transaction->authority)->verify();
-                DB::transaction(function () use ($order, $transaction, $user, $receipt, $cacheData) {
+                $order       = Order::query()->find($transaction->order_id);
+                $receipt     = Payment::amount($transaction->amount)->transactionId($transaction->authority)->verify();
+                $voucher     = !isset($cacheData['voucher_id']) ?: Voucher::query()->find($cacheData['voucher_id']);
+                DB::transaction(function () use ($order, $transaction, $user, $receipt, $cacheData, $voucher) {
 
                     $order->update([
                         'status' => OrderTypeEnum::PAY_OK
@@ -164,12 +167,16 @@ class OrderController extends Controller
 
                     foreach ($files as $file) {
                         $order->files()->attach($file, [
-                            'total_amount' => $this->calculateRebate($file)
+                            'total_amount' =>  $voucher
+                                ?
+                                $this->calculateVoucher($voucher->percentage, $voucher->rebate, $this->calculateRebate($file))
+                                :
+                                $this->calculateRebate($file)
                         ]);
                         $user->files()->attach($file, [
-                            'total_amount' =>  $cacheData['voucherId']
+                            'total_amount' =>  $voucher
                                 ?
-                                $this->calculateVoucherCode($cacheData['voucherId'], $this->calculateRebate($file))
+                                $this->calculateVoucher($voucher->percentage, $voucher->rebate, $this->calculateRebate($file))
                                 :
                                 $this->calculateRebate($file),
                             'voucher_id' => $cacheData['voucherId'],
@@ -193,21 +200,21 @@ class OrderController extends Controller
     }
 
 
-    private function makeOrder($files, $voucherId)
+    private function makeOrder($files)
     {
-        $total_amount = 0;
-        $orderData['user_id'] = auth()->id();
+        $total_amount             = 0;
+        $orderData['user_id']     = auth()->id();
         $orderData['total_items'] = $files->count();
-        $orderData['voucher_id'] = $voucherId;
-        $orderData['status'] = OrderTypeEnum::PENDING;
-        $orderData['bought_at'] = now();
-
+        $orderData['status']      = OrderTypeEnum::PENDING;
+        $orderData['bought_at']   = now();
+        $orderData                = request()->filled('voucher_id') ? $orderData + ['voucher_id' => request()->input('voucher_id')] : $orderData;
+        $voucher                  = request()->filled('voucher_id') ? Voucher::query()->find(request()->input('voucher_id')) : null;
         $total_amount = $files->sum(
             fn ($file)
             =>
-            request()->has('voucher_id')
+            $voucher
                 ?
-                $this->calculateVoucherCode($voucherId, $this->calculateRebate($file))
+                $this->calculateVoucher($voucher->percentage, $voucher->rebate, $this->calculateRebate($file))
                 :
                 $this->calculateRebate($file)
         );
