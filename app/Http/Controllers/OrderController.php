@@ -152,7 +152,7 @@ class OrderController extends Controller
                 $transaction = Transaction::query()->where('uuid', $request->uuid)->first();
                 $order       = Order::query()->find($transaction->order_id);
                 $receipt     = Payment::amount($transaction->amount)->transactionId($transaction->authority)->verify();
-                $voucher     = !isset($cacheData['voucher_id']) ?: Voucher::query()->find($cacheData['voucher_id']);
+                $voucher     = isset($cacheData['voucher_id']) ? Voucher::query()->find($cacheData['voucher_id']) : null;
                 DB::transaction(function () use ($order, $transaction, $user, $receipt, $cacheData, $voucher) {
 
                     $order->update([
