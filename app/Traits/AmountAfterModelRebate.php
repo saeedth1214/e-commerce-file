@@ -18,13 +18,13 @@ trait AmountAfterModelRebate
         return $this->rebateWithNumberType($model);
     }
 
-    public function calculateVoucherCode(Voucher $voucher, $total_amount)
+    public function calculateVoucher(bool $percentage, float $rebate, $price)
     {
-        if ($voucher->percentage) {
-            return (1 - $voucher->rebate / 100) * $total_amount;
+        if ($percentage) {
+            return (1 - $rebate / 100) * $price;
         }
 
-        return $total_amount - $voucher->rebate;
+        return $price - $rebate;
     }
     private function rebateWithPercentageType(Model $model)
     {
