@@ -42,7 +42,7 @@ class RefreshDownloadLink extends Command
      */
     public function handle()
     {
-        $files = File::query()->all();
+        $files = File::query()->get();
 
         foreach ($files as $file) {
 
@@ -53,6 +53,8 @@ class RefreshDownloadLink extends Command
             $file->update([
                 'link' => $url
             ]);
+
+            return $this->info('Re-generate download lnk is ok :)');
 
             // RegenerateDownloadLink::dispatch($file);
         }
