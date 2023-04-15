@@ -51,10 +51,10 @@ class RefreshDownloadLink extends Command
             $url = Storage::temporaryUrl($fullPath, now()->addSeconds(604800));
 
             $file->update([
-                'link' => $url
+                'link' => 'test url'
             ]);
 
-            return $this->info('Re-generate download lnk is ok :)');
+            return $this->info('Re-generate download link was complete .');
 
             // RegenerateDownloadLink::dispatch($file);
         }
