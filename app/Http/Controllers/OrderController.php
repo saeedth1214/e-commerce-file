@@ -96,7 +96,7 @@ class OrderController extends Controller
             'fileIds' => $fileIds,
             'userId' => auth()->id(),
         ];
-        $cacheData = !$request->voucher_id ?: $cacheData + ['voucherId' => $request->voucher_id];
+        $cacheData = !$request->voucher_id ? $cacheData : $cacheData + ['voucherId' => $request->voucher_id];
         // create cache
         Cache::put($uuid, $cacheData, 120);
 
