@@ -179,7 +179,7 @@ class OrderController extends Controller
                                 $this->calculateVoucher($voucher->percentage, $voucher->rebate, $this->calculateRebate($file))
                                 :
                                 $this->calculateRebate($file),
-                            'voucher_id' => $cacheData['voucherId'],
+                            'voucher_id' => $cacheData['voucherId']??null,
                             'bought_at' => now(),
                             'access' => AccessTypeEnum::Payment
                         ]);
