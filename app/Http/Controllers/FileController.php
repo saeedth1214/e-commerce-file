@@ -258,8 +258,9 @@ class FileController extends Controller
     public function download(File $file)
     {
         try {
-            if (is_null($file->link)) {
-                return apiResponse()->message('This file not found.')->fail();
+            // check Has been set preview  for main file
+            if (!isset($file->getMedia('file-image')[0])) {
+                return apiResponse()->message('There is no preview for this file.')->fail();
             }
 
             $fullPath = $this->ResolveFileFullPath($file);
@@ -268,7 +269,7 @@ class FileController extends Controller
                 return apiResponse()->message('This file not found.')->fail();
             }
 
-            $url = $file->link;
+            $url = $this->generateS3TemporaryUrl($fullPath);
 
             // handle daily download count
             Event::dispatch(new DailyFileDownloadEvent($file));
@@ -285,25 +286,10 @@ class FileController extends Controller
             return apiResponse()->message($th->getMessage())->status($statusCode)->fail();
         }
     }
-
-    public function generateS3TemporaryUrl(GenerateTemporaryUrlRequest $request, File $file)
+    // GenerateTemporaryUrlRequest $request, File $file
+    private function generateS3TemporaryUrl($fullPath)
     {
-
-        // check Has been set preview  for main file
-        if (!isset($file->getMedia('file-image')[0])) {
-            return apiResponse()->message('There is no preview for this file.')->fail();
-        }
-
-        $fullPath = $this->ResolveFileFullPath($file);
-
-        $expirationTime = $request->input('expiration_time');
-
-        $url = Storage::temporaryUrl($fullPath, now()->addSeconds($expirationTime));
-
-        $file->update([
-            'link' => $url
-        ]);
-
+        return Storage::temporaryUrl($fullPath, now()->addHour());
         return apiResponse()->empty();
     }
 

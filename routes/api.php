@@ -64,7 +64,7 @@ Route::prefix('panel')
         //file comments
         Route::post('files/{file}/comments', [FileController::class, 'assignComment'])->name('file.comment');
         Route::put('files/{file}/comments/{comment}', [FileController::class, 'updateComment'])->name('file.update.comment');
-        Route::patch('files/{file}/generate-download-link', [FileController::class, 'generateS3TemporaryUrl'])->name('file.generate.download.link');
+        // Route::patch('files/{file}/generate-download-link', [FileController::class, 'generateS3TemporaryUrl'])->name('file.generate.download.link');
         Route::post('files/{file}/attributes', [FileController::class, 'assignAttributes'])->name('file.attributes');
 
         //user plan
